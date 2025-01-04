@@ -1,0 +1,437 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    height: 100vh; 
+    font-family: Arial, sans-serif;
+    /* font-family: MADE-TOMMY; */
+    background-color: #222222;
+    font-size: 14px;
+}
+
+
+
+
+
+
+
+
+/* Sidebar styling */
+.sidebar {
+    width: 240px;
+    min-width: 240px;
+    background-color: #1b1b1b;
+    color: white;
+    overflow-y: auto;
+}
+
+.sidebar header {
+    padding: 10px 5px 5px;
+    background-color: #1b1b1b;
+    position: fixed;
+    width: 230px;
+    border-bottom: 1px solid #575757;
+    align-items: center;
+}
+
+
+
+
+.setting {
+    background-color: transparent;
+    border: 0;
+    padding: 3px 2px 0;
+    border-radius: 10px;
+}
+
+.setting:hover {
+    background-color: #383838;
+}
+
+.setting img {
+    width: 30px;
+    height: auto;
+}
+
+
+.add {
+    /* display: block; */
+    background-color: transparent;
+    border: 0;
+    padding: 3px 3px 0 3px;
+    border-radius: 10px;
+    /* margin-top: 0px; */
+    /* align-items: center; */
+    /* justify-content: flex-end;*/
+    margin-left: 145px;
+}
+
+.add:hover {
+    background-color: #383838;
+}
+
+.add img {
+    width: 30px;
+    height: auto;
+}
+
+
+
+
+.sidebar a {
+    display: block;
+    padding: 10px;
+    color: white;
+    text-decoration: none;
+    margin: 5px 5px;
+    border-radius: 8px;
+}
+
+.sidebar a:hover {
+    background-color: #383838;
+}
+
+.sidebar .space {
+    padding: 30px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Main content panel styling */
+.main {
+    flex-grow: 1;
+    position: relative;
+    background-color: #131313;
+    color: #ebebeb;
+    overflow-y: auto;
+}
+
+
+
+
+
+.main .header {
+    position: fixed;
+    top: 0;
+    display: flex;
+    left: 240px;
+    width: calc(100% - 248px);
+    background-color: #252525;
+    padding: 12px 15px 12px;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); */
+    z-index: 1;
+    /* border-bottom: 1px solid #575757; */
+    /* flex-wrap: wrap; */
+    /* flex-direction: column; */
+    /* height: 150px; */
+}
+
+.main .header .logo {
+    width: 150px;
+    height: auto;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    /* margin: 0; */
+}
+
+
+
+
+
+.header .img-container {
+    border: 2px dashed rgb(129, 129, 129);
+    padding: 5px 10px;
+    display: grid;
+    border-radius: 20px;
+    margin: 2px 0px;
+    /* margin: 0; */
+}
+
+.header .img-container.dragover {
+    background-color: #3d3d3d;
+}
+
+.main .header .img-container img {
+    width: 32px;
+    height: auto;
+    margin: 5px auto;
+}
+
+.header .img-container p {
+    font-size: 12px;
+    margin: 0 5px 2px;
+}
+
+.browse-btn {
+    padding: 4px 10px;
+    margin: 6px auto 10px;
+    background-color: #339966;
+    border: 0;
+    border-radius: 6px;
+    color: white;
+}
+
+.browse-btn:hover {
+    background-color: #2b8357;
+}
+
+.main .header .info-btn {
+    background-color: transparent;
+    border: #141414;
+    display: grid;
+    height: 18px;
+    border-radius: 5px;
+    margin-left: 5px;
+}
+
+.main .header .info-btn:hover {
+    filter: brightness(0.8); /* Increase brightness */
+}
+
+.main .header .info-btn img {
+    width: 18px;
+    height: auto;
+
+}
+
+
+
+
+
+
+.header div .manual-add {
+    margin-top: 20px;
+    margin-left: 20px;
+    padding: 12px 15px;
+    height: fit-content;
+    border: 0;
+    background-color: #339966;
+    color: white;
+    border-radius: 10px;
+    font-size: 15px;
+    display: grid;
+}
+
+.header div .manual-add:hover {
+    background-color: #2b8357;
+}
+
+
+.main .header .inline {
+    display: inline-flex;
+}
+
+.main .header div .analytic-btn {
+    display: grid;
+    background-color: transparent;
+    border: #141414;
+    border-radius: 7px;
+    height: fit-content;
+    margin: 12px;
+    margin-left: 22px;
+    padding: 2px 2px 4px 2px;
+}
+
+.main .header div .analytic-btn:hover {
+    background-color: #3d3d3d;
+}
+
+.header div .analytic-btn img {
+    width: 28px;
+    height: auto;
+}
+
+.header div .data-setting {
+    display: grid;
+    background-color: transparent;
+    border: #141414;
+    border-radius: 7px;
+    height: fit-content;
+    margin: 12px;
+    padding: 3px 2px 2px 2px;
+    margin-left: 0;
+}
+
+.header div .data-setting:hover {
+    background-color: #3d3d3d;
+}
+
+.header div .data-setting img {
+    width: 28px;
+    height: auto;
+    
+}
+
+.header div .export-xml {
+    display: flex;
+    background-color: transparent;
+    border: #141414;
+    border-radius: 7px;
+    /* width: fit-content; */
+    margin: 12px;
+    padding: 2px 4px 4px 4px;
+    margin-left: 0;
+    color: white;
+    align-items: center;
+}
+
+.header div .export-xml:hover {
+    background-color: #3d3d3d;
+}
+
+.header div .export-xml img {
+    width: 28px;
+    height: auto;
+    margin-right: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Contents */
+
+.content {
+    padding: 60px 10px 20px 10px; /* Padding adjusts for fixed header */
+    
+}
+
+.content .space {
+    padding: 50px 0px;
+}
+
+.trade {
+    margin-bottom: 8px;
+    display: flex;
+}
+
+.content .info {
+    /* height: fit-content; */
+    /* display: grid; */
+    /* border: #131313 solid 2px; */
+    width: 900px;
+}
+
+.content .img {
+    /* border: #131313 solid 2px; */
+    width: calc(100% - 900px);
+}
+
+.content p {
+    /* margin-bottom: 15px; */
+    line-height: 1.6;
+    /* height: fit-content; */
+}
+
+
+.trade {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 15px;
+    /* margin: 0; */
+}
+
+.trade-num {
+    /* margin-right: 20px; */
+    margin-bottom: 10px;
+
+    background-color: #a30b0b; 
+    /* r #aa0000 #2e2e2e g #15613b*/
+
+    padding: 5px;
+    border-radius: 5px;
+    width: fit-content;
+}
+
+.trade .space {
+    margin: 10px;
+}
+
+.trade .title {
+    display: flex;
+    align-items: flex-start;
+}
+
+.trade .edit {
+    background-color: transparent;
+    border: 0;
+    border-radius: 8px;
+    padding: 4px 4px 0px 4px;
+    margin-left: 10px;
+}
+.trade .delete {
+    background-color: transparent;
+    border: 0;
+    border-radius: 8px;
+    padding: 4px 4px 0px 4px;
+    margin-left: 10px;
+}
+.trade .edit:hover {
+    background-color: #3d3d3d;
+}
+.trade .delete:hover {
+    background-color: #a30b0b;
+}
+
+
+.trade .edit img {
+    width: 25px;
+    height: auto;
+}
+.trade .delete img {
+    width: 25px;
+    height: auto;
+}
+
+
+
+
+/* Webkit Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;  /* Thin vertical scrollbar */
+    height: 8px; /* Thin horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;  /* Dark track color */
+    border-radius: 10px; /* Rounded corners for the track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;  /* Dark thumb color */
+    border-radius: 10px; /* Rounded corners for the thumb */
+    border: 2px solid transparent;  /* Subtle border for better visibility */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #777;  /* Slightly lighter thumb on hover */
+}
+
+/* Optional: Style the corner where horizontal and vertical scrollbars meet */
+::-webkit-scrollbar-corner {
+    background: #222;
+}
