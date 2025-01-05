@@ -2,32 +2,14 @@ const uploadBox = document.getElementById('img-container');
 const fileInput = document.getElementById('file-input');
 const browseButton = document.getElementById('browse-btn');
 const preview = document.getElementById('preview');
-
-
-// axios.post("http://127.0.0.1:3000/", data)
-// .then(response => {
-//     console.log('Response:', response.data);
-//     alert('POST request successful!');
-// })
-// .catch(error => {
-//     console.error('Error:', error);
-//     alert('POST request failed.');
-// });
-// const data = {name:"Ali", age:22};
-
-// browseButton.addEventListener('click', ()=> {
-//     axios.post("http://127.0.0.1:3000/api", data)
-//     .then(response => {
-//      console.log('Response:', response.data);
-//      alert('POST request successful!');
-//     })
-//     .catch(error => {
-//      console.error('Error:', error);
-//      alert('POST request failed.');
-//     });
-// })
+const path = require('path');
+// require('dotenv').config({ path: '../Server/private.env' });
 
 console.log("Hi whassup");
+
+
+
+
 
 
 
@@ -62,6 +44,8 @@ uploadBox.addEventListener('drop', (event) => {
 
 
 
+
+
 // Function to handle multiple file uploads
 function handleFiles(files) {
     const fileArray = Array.from(files); // Convert FileList to Array
@@ -69,6 +53,7 @@ function handleFiles(files) {
     // Preview and upload each file
     fileArray.forEach((file) => {
         if (file.type.startsWith('image/')) {
+
             // Preview the image
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -79,16 +64,21 @@ function handleFiles(files) {
             };
             reader.readAsDataURL(file);
 
-            // Simulate file upload (replace with actual server endpoint)
+            
+
+
+
             const formData = new FormData();
             formData.append('image', file);
 
+            
+            // Simulate file upload (replace with actual server endpoint)
             fetch('http://localhost:3000/upload', {
                 method: 'POST',
                 body: formData,
                 // mode: 'no-cors'
             })
-                // .then(response => response.json())
+                .then(response => response.json())
                 .then(data => {
                     console.log(`File "${file.name}" uploaded successfully!`, data);
                 })
