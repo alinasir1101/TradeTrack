@@ -2,8 +2,6 @@ const uploadBox = document.getElementById('img-container');
 const fileInput = document.getElementById('file-input');
 const browseButton = document.getElementById('browse-btn');
 const preview = document.getElementById('preview');
-const path = require('path');
-// require('dotenv').config({ path: '../Server/private.env' });
 
 console.log("Hi whassup");
 
@@ -11,6 +9,9 @@ console.log("Hi whassup");
 
 
 
+
+
+// Images Input
 
 
 // Trigger file input when "Browse" button is clicked
@@ -44,9 +45,24 @@ uploadBox.addEventListener('drop', (event) => {
 
 
 
+// Display Data and Image
+async function displayData() {
+    try {
+        res = await axios.get("http://localhost:3000/api/tradeData");
+        const tradeData = res.data;
+        console.log("Trade data recieved: ", tradeData)
+    } catch (error) {
+        console.log("Error fetching data: ", error);
+    }
+}
+
+
+
+
 
 
 // Function to handle multiple file uploads
+
 function handleFiles(files) {
     const fileArray = Array.from(files); // Convert FileList to Array
 
@@ -73,14 +89,15 @@ function handleFiles(files) {
 
             
             // Simulate file upload (replace with actual server endpoint)
-            fetch('http://localhost:3000/upload', {
+            fetch('http://localhost:3000/api/upload', {
                 method: 'POST',
                 body: formData,
                 // mode: 'no-cors'
             })
-                .then(response => response.json())
+                // .then(response => response.json())
                 .then(data => {
                     console.log(`File "${file.name}" uploaded successfully!`, data);
+                    displayData();
                 })
                 .catch(error => {
                     console.error(`Error uploading file "${file.name}":`, error);
@@ -88,5 +105,8 @@ function handleFiles(files) {
         } else {
             alert(`"${file.name}" is not a valid image file.`);
         }
+
+        
+
     });
 }
