@@ -1,3 +1,4 @@
+
 * {
     margin: 0;
     padding: 0;
@@ -334,6 +335,10 @@ body {
     padding: 20px;
     border-radius: 15px;
     /* margin: 0; */
+}
+
+#sample-trade {
+    display: none;
 }
 
 .content .info {
