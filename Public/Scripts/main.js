@@ -11,6 +11,8 @@ function wait(ms) {
 }
 
 
+let tradeId = 0;
+
 
 
 
@@ -49,6 +51,7 @@ uploadBox.addEventListener('drop', (event) => {
 
 
 
+console.log('assigned trade ID:', tradeId);
 
 
 
@@ -97,8 +100,9 @@ function handleFiles(files) {
                 // .then(response => response.json())
                 .then((data) => {
                     console.log(`File "${file.name}" uploaded successfully!`, data);
-                    const { message, tradeID } = data;
-                    console.log(`Message: ${message}, Trade ID: ${tradeID}`);
+                    const { newTrade } = data;
+                    console.log(`Trade: ${newTrade.imageURL}`);
+                    // tradeId = tradeID;
                 })
                 .catch(error => {
                     console.error(`Error uploading file "${file.name}":`, error);
@@ -109,7 +113,7 @@ function handleFiles(files) {
         
 
         
-
+        console.log('assigned trade ID:', tradeId);
     });
 }
 

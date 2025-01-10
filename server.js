@@ -141,7 +141,6 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
     try {
         await uploadImage(buffer, destination);
-        res.status(200).json({message: 'File uploaded to Cloud Storage!', tradeID: tradeId});
     } catch (error) {
         res.status(500).send('Error uploading file: ' + error.message);
         return;
@@ -171,6 +170,9 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
         // Log the newTrade object for debugging
         console.log('New Trade:', newTrade);
+
+        
+        res.status(200).json(newTrade);
     } catch (err) {
         console.log("Error saving data: ", err)
     }
