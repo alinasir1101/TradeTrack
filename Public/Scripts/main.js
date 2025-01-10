@@ -89,11 +89,8 @@ function handleFiles(files) {
                 // .then(response => response.json())
                 .then((data, res) => {
                     console.log(`File "${file.name}" uploaded successfully!`, data);
-                    if (!res.ok) {
-                        throw new Error(`HTTP Error! Status: ${res.status}`);
-                    }
-                    const receivedData = res.json();
-                    console.log("Data received: ", receivedData);
+                    const { message, tradeID } = data;
+                    console.log(`Message: ${message}, Trade ID: ${tradeID}`);
                 })
                 .catch(error => {
                     console.error(`Error uploading file "${file.name}":`, error);

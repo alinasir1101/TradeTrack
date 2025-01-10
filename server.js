@@ -113,7 +113,7 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
     try {
         await uploadImage(buffer, destination);
-        res.status(200).send('File uploaded to Cloud Storage!');
+        res.status(200).json({message: 'File uploaded to Cloud Storage! Trade ID', tradeID: 123});
     } catch (error) {
         res.status(500).send('Error uploading file: ' + error.message);
         return;
@@ -143,15 +143,15 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         // Log the newTrade object for debugging
         console.log('New Trade:', newTrade);
 
-        // Assign and log the currentTradeId
-        currentTradeId = newTrade._id;
-        console.log('Current Trade ID before fetching:', currentTradeId);
+        // // Assign and log the currentTradeId
+        // currentTradeId = newTrade._id;
+        // console.log('Current Trade ID before fetching:', currentTradeId);
 
     } catch (err) {
         console.log("Error saving data: ", err)
     }
 
-    console.log('Current Trade ID:', currentTradeId);
+    // console.log('Current Trade ID:', currentTradeId);
 
     // if (currentTradeId === "none") {
     //     return res.status(400).json({ error: 'No trade ID available' });
@@ -166,7 +166,7 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
     //     console.log("Error finding data: ", err);
     //     res.status(500).json({ error: 'Error finding data' });
     // }
-    res.status(200).json({key: 123});
+    // res.status(200).json({key: 123});
 });
 
 // Get trade data
