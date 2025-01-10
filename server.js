@@ -6,9 +6,6 @@ const multer = require('multer');
 const mongoose = require('mongoose');
 const path = require('path');
 const { Storage } = require('@google-cloud/storage');
-const { stringify } = require('querystring');
-const { timeStamp } = require('console');
-const { truncate } = require('fs');
 
 const serviceAccountPath = 'C:/Users/ali zain/Desktop/Coding/tradetrack-446815-63935468e39e.json';
 const gStorage = new Storage({ keyFilename: serviceAccountPath });
@@ -25,11 +22,6 @@ console.log('Hi');
 let currentTradeId = "none";
 let currentURL;
 
-
-
-
-
-
 // Middleware setup
 app.use(cors({})); // Enable Cross-Origin Resource Sharing
 app.use(bodyParser.json()); // Parse JSON payloads in requests
@@ -40,10 +32,6 @@ app.use("/assets", express.static(__dirname + "/Assets"));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'Views', 'main.html'));
 });
-
-
-
-
 
 // Connect to MongoDB Atlas
 mongoose.connect(DB_URI).then(() => console.log('MongoDB connected'))
@@ -86,23 +74,15 @@ const tradeSchema = new mongoose.Schema({
     tp: {type: Number},
     sl: {type: Number},
     confluences: {type: Array},
-    imageURL: {type: String, unique: true}
+    imageURL: {type: String}
 });
 const Trade = mongoose.model('Trade', tradeSchema);
-
-
 
 
 
 // Set up multer storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
-
-
-
-
-
 
 // Function to upload a file to Google Cloud Storage
 async function uploadImage(buffer, destination) {
@@ -120,15 +100,8 @@ async function uploadImage(buffer, destination) {
     }
 }
 
-
-
-
-
-
-
 // Upload image route
 app.post('/api/upload', upload.single('image'), async (req, res) => {
-
     const file = req.file;
 
     if (!file) {
@@ -137,13 +110,13 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
     const buffer = req.file.buffer;
     const destination = `uploads/hi-lol-${req.file.originalname}`;
-    
 
     try {
         await uploadImage(buffer, destination);
         res.status(200).send('File uploaded to Cloud Storage!');
     } catch (error) {
         res.status(500).send('Error uploading file: ' + error.message);
+        return;
     }
 
     try {
@@ -167,41 +140,41 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
             imageURL: currentURL
         });
 
-        const savedTrade = await newTrade.save();
+        // Log the newTrade object for debugging
+        console.log('New Trade:', newTrade);
 
-        
+        // Assign and log the currentTradeId
+        currentTradeId = newTrade._id;
+        console.log('Current Trade ID before fetching:', currentTradeId);
 
     } catch (err) {
         console.log("Error saving data: ", err)
     }
-    
-    console.log(savedTrade, savedTrade._id);
 
-    currentTradeId = savedTrade._id
-    console.log(currentTradeId);
+    console.log('Current Trade ID:', currentTradeId);
 
-    
+    // if (currentTradeId === "none") {
+    //     return res.status(400).json({ error: 'No trade ID available' });
+    // }
+
+    // try {
+    //     const tradeData = await Trade.findOne({ _id: currentTradeId });
+    //     if (!tradeData) {
+    //         return res.status(404).json({ error: 'Trade data not found' });
+    //     }
+    // } catch (err) {
+    //     console.log("Error finding data: ", err);
+    //     res.status(500).json({ error: 'Error finding data' });
+    // }
+    res.status(200).json({key: 123});
 });
-
-
 
 // Get trade data
 app.get('/api/tradeData', async (req, res) => {
-    console.log(currentTradeId);
-    try {
-        
-        const tradeData = await Trade.findOne({_id: currentTradeId});
-        
-    } catch (err) {
-        console.log("Error finding data: ", err);
-    }
-    res.json(tradeData);
+
+
+    
 });
-
-
-
-
-
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
