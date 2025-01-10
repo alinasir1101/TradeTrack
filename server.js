@@ -33,12 +33,19 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'Views', 'main.html'));
 });
 
+
+
+
+
+
+
 // Connect to MongoDB Atlas
 mongoose.connect(DB_URI).then(() => console.log('MongoDB connected'))
 .catch((err) => console.log(err));
 
 // Define User Schema and Mongoose Model
 const userSchema = new mongoose.Schema({
+    userId: {type: Number},
     name: {type: String},
     email: {type: String, unique: true},
     password: {type: String},
@@ -49,10 +56,11 @@ const User = mongoose.model('User', userSchema);
 
 // Strategies
 const strategySchema = new mongoose.Schema({
-    userId: {type: String},
+    strategyId: {type: Number},
+    userId: {type: Number},
     strategyName: {type: String},
     tradesList: {type: Array},
-    visibleDat: {type: Array},
+    visibleData: {type: Array},
     numOfTrades: {type: Number},
     numOfProfitableTrades: {type: Number},
 });
@@ -60,8 +68,9 @@ const Strategy = mongoose.model('Strategy', strategySchema);
 
 // Trades
 const tradeSchema = new mongoose.Schema({
-    userId: {type: String},
-    strategyId: {type: String},
+    tradeId: {type: Number},
+    strategyId: {type: Number},
+    userId: {type: Number},
     pairName: {type: String},
     outcome: {type: String},
     date: {type: Date},
@@ -80,9 +89,23 @@ const Trade = mongoose.model('Trade', tradeSchema);
 
 
 
+
+
 // Set up multer storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+
+
+let tradeId = 1;
+
+
+
+
+
+
+
+
 
 // Function to upload a file to Google Cloud Storage
 async function uploadImage(buffer, destination) {
@@ -100,6 +123,11 @@ async function uploadImage(buffer, destination) {
     }
 }
 
+
+
+
+
+
 // Upload image route
 app.post('/api/upload', upload.single('image'), async (req, res) => {
     const file = req.file;
@@ -113,7 +141,7 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
     try {
         await uploadImage(buffer, destination);
-        res.status(200).json({message: 'File uploaded to Cloud Storage! Trade ID', tradeID: 123});
+        res.status(200).json({message: 'File uploaded to Cloud Storage!', tradeID: tradeId});
     } catch (error) {
         res.status(500).send('Error uploading file: ' + error.message);
         return;
@@ -123,8 +151,9 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         // Save to Database
         currentURL = "https://storage.googleapis.com/tradetrack-bucket/" + destination;
         const newTrade = await Trade.create({
-            userId: "",
+            tradeId: tradeId,
             strategyId: "",
+            userId: "",
             pairName: "EURUSD",
             outcome: "Profit",
             date: "",
@@ -146,6 +175,12 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         console.log("Error saving data: ", err)
     }
 });
+
+
+
+
+
+
 
 
 app.listen(port, () => {

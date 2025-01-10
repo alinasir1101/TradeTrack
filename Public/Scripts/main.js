@@ -86,11 +86,18 @@ function handleFiles(files) {
                 body: formData,
                 // mode: 'no-cors'
             })
+            
+                .then(response => {
+                // Ensure the response is ok
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Parse the JSON from the response
+                })
                 // .then(response => response.json())
-                .then((data, res) => {
+                .then((data) => {
                     console.log(`File "${file.name}" uploaded successfully!`, data);
                     const { message, tradeID } = data;
-                    res.json();
                     console.log(`Message: ${message}, Trade ID: ${tradeID}`);
                 })
                 .catch(error => {
