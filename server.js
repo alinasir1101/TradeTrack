@@ -5,14 +5,16 @@ const cors = require('cors');
 const multer = require('multer');
 const mongoose = require('mongoose');
 const path = require('path');
-const { Storage } = require('@google-cloud/storage');
+require('dotenv').config({ path: './private.env' });
 
-const serviceAccountPath = 'C:/Users/ali zain/Desktop/Coding/tradetrack-446815-63935468e39e.json';
-const gStorage = new Storage({ keyFilename: serviceAccountPath });
-const bucketName = 'tradetrack-bucket';
+// Set up Google Cloud Storage
+const { Storage } = require('@google-cloud/storage');
+const credentials = json.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+const gStorage = new Storage({ keyFilename: credentials });
+const bucketName = process.env.BUCKET_NAME;
 const bucket = gStorage.bucket(bucketName);
 
-require('dotenv').config({ path: './private.env' });
+
 
 const DB_URI = process.env.DB_URI;
 
