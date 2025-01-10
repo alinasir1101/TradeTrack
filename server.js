@@ -91,6 +91,7 @@ const Trade = mongoose.model('Trade', tradeSchema);
 
 
 
+
 // Set up multer storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -98,7 +99,8 @@ const upload = multer({ storage: storage });
 
 
 let tradeId = 1;
-
+let strategyId = 1;
+let userId = 1;
 
 
 
@@ -137,7 +139,7 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
     }
 
     const buffer = req.file.buffer;
-    const destination = `uploads/hi-lol-${req.file.originalname}`;
+    const destination = `uploads/${tradeId}-${req.file.originalname}`;
 
     try {
         await uploadImage(buffer, destination);
@@ -151,15 +153,15 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         currentURL = "https://storage.googleapis.com/tradetrack-bucket/" + destination;
         const newTrade = await Trade.create({
             tradeId: tradeId,
-            strategyId: "",
-            userId: "",
-            pairName: "EURUSD",
-            outcome: "Profit",
+            strategyId: strategyId,
+            userId: userId,
+            pairName: "",
+            outcome: "",
             date: "",
             time: "",
             session: "",
             timeframe: "",
-            RRR: "",
+            RRR: "1:2",
             orderType: "Limit",
             entryLevel: "",
             tp: "",
@@ -170,8 +172,6 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
         // Log the newTrade object for debugging
         console.log('New Trade:', newTrade);
-
-        
         res.status(200).json(newTrade);
     } catch (err) {
         console.log("Error saving data: ", err)
