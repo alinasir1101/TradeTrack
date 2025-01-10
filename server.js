@@ -142,39 +142,11 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
         // Log the newTrade object for debugging
         console.log('New Trade:', newTrade);
-
-        // // Assign and log the currentTradeId
-        // currentTradeId = newTrade._id;
-        // console.log('Current Trade ID before fetching:', currentTradeId);
-
     } catch (err) {
         console.log("Error saving data: ", err)
     }
-
-    // console.log('Current Trade ID:', currentTradeId);
-
-    // if (currentTradeId === "none") {
-    //     return res.status(400).json({ error: 'No trade ID available' });
-    // }
-
-    // try {
-    //     const tradeData = await Trade.findOne({ _id: currentTradeId });
-    //     if (!tradeData) {
-    //         return res.status(404).json({ error: 'Trade data not found' });
-    //     }
-    // } catch (err) {
-    //     console.log("Error finding data: ", err);
-    //     res.status(500).json({ error: 'Error finding data' });
-    // }
-    // res.status(200).json({key: 123});
 });
 
-// Get trade data
-app.get('/api/tradeData', async (req, res) => {
-
-
-    
-});
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

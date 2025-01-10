@@ -90,6 +90,7 @@ function handleFiles(files) {
                 .then((data, res) => {
                     console.log(`File "${file.name}" uploaded successfully!`, data);
                     const { message, tradeID } = data;
+                    res.json();
                     console.log(`Message: ${message}, Trade ID: ${tradeID}`);
                 })
                 .catch(error => {
@@ -107,14 +108,3 @@ function handleFiles(files) {
 
 
 
-
-// Display Data and Image
-async function displayData() {
-    try {
-        res = await axios.get("http://localhost:3000/api/tradeData");
-        const tradeData = res.data;
-        console.log("Trade data recieved: ", tradeData)
-    } catch (error) {
-        console.log("Error fetching data: ", error);
-    }
-}
