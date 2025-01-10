@@ -3,15 +3,13 @@ const fileInput = document.getElementById('file-input');
 const browseButton = document.getElementById('browse-btn');
 const preview = document.getElementById('preview');
 
-console.log("Hi whassup");
-
+console.log("Hi! Welcome to TradeTrack.");
 
 function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
-let tradeId = 0;
 
 
 
@@ -51,7 +49,88 @@ uploadBox.addEventListener('drop', (event) => {
 
 
 
-console.log('assigned trade ID:', tradeId);
+
+
+
+
+
+
+const targetElement = document.getElementById('content-space');
+
+function displayTrade (trade) {
+    const tradeHTML = `
+    <div class="trade" id="trade">
+        <div class="info">
+
+            <div class="title">
+                <div class="trade-num"><h3>Trade <span class="num">1</span></h3></div>
+                <button class="edit"><img src="../Assets/Edit.png" alt="Edit"></button>
+                <button class="delete"><img src="../Assets/Delete.png" alt=""></button>
+            </div>
+                    
+            <div>
+                <p>
+                    <span class="pair-txt"><strong>Pair:</strong></span>
+                    <span class="pair-name">EURUSD</span>
+                    <span class="space"></span>
+
+                    <span class="outcome-txt"><strong>Outcome:</strong></span>
+                    <span class="outcome">Profit</span>
+                    <span class="space"></span>
+
+                    <span class="date-txt"><strong>Date:</strong></span>
+                    <span class="date">12/5/2002</span>
+                    <span class="space"></span>
+
+                    <span class="time-txt"><strong>Time:</strong></span>
+                    <span class="time">11:00 AM</span>
+                    <span class="space"></span>
+
+                    <span class="session-txt"><strong>Session:</strong></span>
+                    <span class="session">London</span>
+                    <span class="space"></span>
+
+                    <span class="rrr-txt"><strong>Risk-to-Reward Ratio:</strong></span>
+                    <span class="rrr">1:2</span>
+                    <span class="space"></span>
+
+                    <span class="position-txt"><strong>Position:</strong></span>
+                    <span class="position">Long</span>
+                    <span class="space"></span>
+
+                    <span class="order-type-txt"><strong>Order Type:</strong></span>
+                    <span class="order-type">Limit Order</span>
+                    <span class="space"></span>
+
+                    <span class="entry-text"><strong>Entry Level:</strong></span>
+                    <span class="entry">1.0351</span>
+                    <span class="space"></span>
+
+                    <span class="exit-txt"><strong>Exit Level:</strong></span>
+                    <span class="exit">1.0398</span>
+                    <span class="space"></span>
+
+                    <span class="timeframe-txt"><strong>Timeframe:</strong></span>
+                    <span class="timeframe">15m</span>
+                    <span class="space"></span>
+
+                    <span class="confluences-txt"><strong>Confluences:</strong></span>
+                    <span class="confluences">15m Order Block, 1h Support, 4h Order Block</span>
+                </p>
+            </div>
+                    
+        </div>
+        <div class="img-container"><img id="trade-img" src="${trade.imageURL}" alt="Trade"></div>
+    </div>
+    `;
+
+    content-space.insertAdjacentHTML('afterend', tradeHTML);
+}
+
+
+
+
+
 
 
 
@@ -65,15 +144,15 @@ function handleFiles(files) {
     fileArray.forEach((file) => {
         if (file.type.startsWith('image/')) {
 
-            // Preview the image
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.alt = 'Preview';
-                preview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
+            // // Preview the image
+            // const reader = new FileReader();
+            // reader.onload = (e) => {
+            //     const img = document.createElement('img');
+            //     img.src = e.target.result;
+            //     img.alt = 'Preview';
+            //     preview.appendChild(img);
+            // };
+            // reader.readAsDataURL(file);
 
             
 
@@ -97,23 +176,22 @@ function handleFiles(files) {
                     }
                     return response.json(); // Parse the JSON from the response
                 })
-                // .then(response => response.json())
                 .then((data) => {
                     console.log(`File "${file.name}" uploaded successfully!`, data);
-                    const { newTrade } = data;
-                    console.log(`Trade: ${newTrade.imageURL}`);
-                    // tradeId = tradeID;
+                    const newTrade = data;
+                    console.log(`Trade: ${newTrade}, Image: ${newTrade.imageURL}`);
+                    displayTrade(newTrade);
                 })
                 .catch(error => {
                     console.error(`Error uploading file "${file.name}":`, error);
                 });
+
         } else {
             alert(`"${file.name}" is not a valid image file.`);
         }
         
 
         
-        console.log('assigned trade ID:', tradeId);
     });
 }
 
