@@ -6,6 +6,10 @@ const preview = document.getElementById('preview');
 console.log("Hi whassup");
 
 
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 
 
@@ -43,18 +47,6 @@ uploadBox.addEventListener('drop', (event) => {
     handleFiles(event.dataTransfer.files);
 });
 
-
-
-// Display Data and Image
-async function displayData() {
-    try {
-        res = await axios.get("http://localhost:3000/api/tradeData");
-        const tradeData = res.data;
-        console.log("Trade data recieved: ", tradeData)
-    } catch (error) {
-        console.log("Error fetching data: ", error);
-    }
-}
 
 
 
@@ -95,9 +87,13 @@ function handleFiles(files) {
                 // mode: 'no-cors'
             })
                 // .then(response => response.json())
-                .then(data => {
+                .then((data, res) => {
                     console.log(`File "${file.name}" uploaded successfully!`, data);
-                    displayData();
+                    if (!res.ok) {
+                        throw new Error(`HTTP Error! Status: ${res.status}`);
+                    }
+                    const receivedData = res.json();
+                    console.log("Data received: ", receivedData);
                 })
                 .catch(error => {
                     console.error(`Error uploading file "${file.name}":`, error);
@@ -105,8 +101,23 @@ function handleFiles(files) {
         } else {
             alert(`"${file.name}" is not a valid image file.`);
         }
+        
 
         
 
     });
+}
+
+
+
+
+// Display Data and Image
+async function displayData() {
+    try {
+        res = await axios.get("http://localhost:3000/api/tradeData");
+        const tradeData = res.data;
+        console.log("Trade data recieved: ", tradeData)
+    } catch (error) {
+        console.log("Error fetching data: ", error);
+    }
 }
