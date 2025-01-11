@@ -16,9 +16,6 @@ const bucket = gStorage.bucket(bucketName);
 
 
 
-
-
-
 const DB_URI = process.env.DB_URI;
 
 const app = express();
@@ -37,9 +34,6 @@ app.use("/assets", express.static(__dirname + "/Assets"));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'Views', 'main.html'));
 });
-
-
-
 
 
 // Connect to MongoDB Atlas
