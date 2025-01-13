@@ -34,7 +34,7 @@ let currentURL;
 app.use(cors({})); // Enable Cross-Origin Resource Sharing
 app.use(bodyParser.json()); // Parse JSON payloads in requests
 app.use(express.json()); // Parse JSON payloads
-app.use("/public", express.static(__dirname + "/public"));
+app.use("/public", express.static(__dirname + "/Public"));
 app.use("/assets", express.static(__dirname + "/Assets"));
 
 app.get('/', (req, res) => {
