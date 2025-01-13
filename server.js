@@ -9,7 +9,7 @@ require('dotenv').config({ path: './private.env' });
 
 // Set up Google Cloud Storage
 const { Storage } = require('@google-cloud/storage');
-const credentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+const credentials = JSON.parse(Buffer.from(process.env.GOOGLE_CREDENTIALS_JSON, 'base64').toString('utf-8'));
 const gStorage = new Storage({ credentials });
 const bucketName = "tradetrack-bucket";
 const bucket = gStorage.bucket(bucketName);
