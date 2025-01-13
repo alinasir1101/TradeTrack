@@ -1,4 +1,4 @@
-const port = 3000; // Server will run on port 3000
+const port = process.env.PORT || 3000; // Use the port provided by Heroku or default to 3000
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -9,7 +9,13 @@ require('dotenv').config({ path: './private.env' });
 
 // Set up Google Cloud Storage
 const { Storage } = require('@google-cloud/storage');
-const credentials = JSON.parse(Buffer.from(process.env.GOOGLE_CREDENTIALS_JSON, 'base64').toString('utf-8'));
+let credentials;
+try {
+    credentials = JSON.parse(Buffer.from(process.env.GOOGLE_CREDENTIALS_JSON, 'base64').toString('utf-8'));
+} catch (error) {
+    console.error("Error parsing GOOGLE_CREDENTIALS_JSON:", error);
+    process.exit(1); // Exit the process with a non-zero status code
+}
 const gStorage = new Storage({ credentials });
 const bucketName = "tradetrack-bucket";
 const bucket = gStorage.bucket(bucketName);
