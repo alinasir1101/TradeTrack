@@ -173,7 +173,7 @@ function handleFiles(files) {
 
             
             // Simulate file upload (replace with actual server endpoint)
-            fetch('http://localhost:3000/api/upload', {
+            fetch('/api/upload', {
                 method: 'POST',
                 body: formData,
                 // mode: 'no-cors'
