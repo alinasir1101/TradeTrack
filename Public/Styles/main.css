@@ -163,7 +163,7 @@ body {
     padding: 5px 10px;
     display: grid;
     border-radius: 20px;
-    margin: 2px 0px;
+    margin: 2px 0px 0px 5px;
     /* margin: 0; */
 }
 
@@ -236,9 +236,8 @@ body {
     background-color: #2b8357;
 }
 
-
 .main .header .inline {
-    display: inline-flex;
+    display: flex;
 }
 
 .main .header div .analytic-btn {
@@ -452,4 +451,57 @@ body {
 /* Optional: Style the corner where horizontal and vertical scrollbars meet */
 ::-webkit-scrollbar-corner {
     background: #222;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 768px) {
+    body .sidebar {
+        display: none;
+    }
+    .main .header {
+        left: 0;
+        width: 100%;
+    }
+}
+
+
+/* Styles for devices with max width of 480px (mobile phones) */
+@media (max-width: 480px) {
+    body {
+        font-size: 7px;
+    }
+    body .sidebar {
+        display: none;
+    }
+    .main .header {
+        left: 0;
+        width: 100%;
+    }
+    .main .header .logo {
+        display: none;
+    }
+    .header div .manual-add {
+        margin-top: 20px;
+        margin-left: 20px;
+        padding: 9px 10px;
+        font-size: 14px;
+    }
+    .main .header .inline {
+        width: auto;
+    }
+    .main .header .other-buttons {
+        margin-left: 0;
+        margin-top: 10px;
+        padding-left: 0;
+    }
 }
