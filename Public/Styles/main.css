@@ -545,4 +545,8 @@ body {
         margin-top: 15px;
         font-size: 14px;
     }
+    .content .space {
+        padding: 37px 0px;
+    }
+    
 }
