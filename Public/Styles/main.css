@@ -36,39 +36,39 @@ body {
     position: fixed;
     width: 230px;
     border-bottom: 1px solid #575757;
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+
+.menu {
+    background-color: transparent;
+    border: 0;
+    padding: 5px 5px 2px;
+    border-radius: 10px;
     align-items: center;
 }
 
-
-
-
-.setting {
-    background-color: transparent;
-    border: 0;
-    padding: 3px 2px 0;
-    border-radius: 10px;
-}
-
-.setting:hover {
+.menu:hover {
     background-color: #383838;
 }
 
-.setting img {
-    width: 30px;
+.menu img {
+    width: 24px;
     height: auto;
 }
 
 
 .add {
-    /* display: block; */
     background-color: transparent;
     border: 0;
     padding: 3px 3px 0 3px;
     border-radius: 10px;
-    /* margin-top: 0px; */
-    /* align-items: center; */
-    /* justify-content: flex-end;*/
-    margin-left: 145px;
+    align-items: center;
 }
 
 .add:hover {
@@ -117,7 +117,12 @@ body {
 
 
 
-/* Main content panel styling */
+/* ---------------------------------------- Main content panel styling */
+
+
+
+
+
 .main {
     flex-grow: 1;
     position: relative;
@@ -138,12 +143,8 @@ body {
     width: calc(100% - 248px);
     background-color: #252525;
     padding: 12px 15px 12px;
-    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); */
     z-index: 1;
-    /* border-bottom: 1px solid #575757; */
-    /* flex-wrap: wrap; */
-    /* flex-direction: column; */
-    /* height: 150px; */
+    border-radius: 0 0 20px 0;
 }
 
 .main .header .logo {
@@ -151,7 +152,6 @@ body {
     height: auto;
     margin-top: 15px;
     margin-bottom: 5px;
-    /* margin: 0; */
 }
 
 
@@ -194,6 +194,11 @@ body {
 .browse-btn:hover {
     background-color: #2b8357;
 }
+
+.mobile-btns {
+    display: none;
+}
+
 
 .main .header .info-btn {
     background-color: transparent;
@@ -316,7 +321,10 @@ body {
 
 
 
-/* Contents */
+/* ----------------------------------------------   Contents */
+
+
+
 
 .content {
     padding: 60px 10px 20px 10px; /* Padding adjusts for fixed header */
@@ -462,46 +470,79 @@ body {
 
 
 
+/* ------------------------------ Mobile Responsive */
 
 
-@media (max-width: 768px) {
-    body .sidebar {
-        display: none;
-    }
-    .main .header {
-        left: 0;
-        width: 100%;
-    }
+
+
+
+.mobile-btns .strategies-list {
+    background-color: transparent;
+    border: 0;
+    padding: 5px 5px 2px;
+    border-radius: 10px;
+    align-items: center;
+}
+.mobile-btns .strategies-list:hover {
+    background-color: #383838;
+}
+.mobile-btns .strategies-list img {
+    width: 24px;
+    height: auto;
 }
 
 
+
+
+
+
 /* Styles for devices with max width of 480px (mobile phones) */
-@media (max-width: 480px) {
-    body {
-        font-size: 7px;
+@media (max-width: 500px) {
+    .mobile-btns {
+        display: block;
+        width: 50px;
+        margin: 5px 0 0 0;
     }
     body .sidebar {
         display: none;
     }
     .main .header {
         left: 0;
-        width: 100%;
+        width: calc(100% - 8px);
+    }
+    .main .img-container {
+        display: none;
     }
     .main .header .logo {
         display: none;
     }
     .header div .manual-add {
-        margin-top: 20px;
-        margin-left: 20px;
+        margin-left: 25px;
+        margin-top: unset;
         padding: 9px 10px;
         font-size: 14px;
     }
     .main .header .inline {
-        width: auto;
+        display: flex;
     }
     .main .header .other-buttons {
         margin-left: 0;
         margin-top: 10px;
         padding-left: 0;
+    }
+    .main .header .export-xml .xml {
+        display: none;
+    }
+    .main .header .export-xml {
+        padding-right: 0;
+    }
+    .main .header .info-btn {
+        margin-top: 28px;
+        margin-left: 5px;
+    }
+    .main .header .browse-btn {
+        padding: 8px 10px;
+        margin-top: 15px;
+        font-size: 14px;
     }
 }
