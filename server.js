@@ -1,4 +1,4 @@
-const port = process.env.PORT || 3000; // Use the port provided by Heroku or default to 3000
+const port = process.env.PORT || 3000; // Use the port provided by Render or default to 3000
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
