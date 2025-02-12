@@ -144,14 +144,14 @@ async function uploadImage(buffer, destination) {
 
 // Previous Trades
 
-app.get('api/previousTrades', (req, res) => {
+app.get('/api/previousTrades', (req, res) => {
     Trade.find()
     .then(trades => {
         res.json(trades);
     })
     .catch(err => {
         console.error('Error fetching trades from database: ', err);
-    })
+    });
 
 });
 

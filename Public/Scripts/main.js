@@ -12,8 +12,7 @@ function wait(ms) {
 
 const contentSpace = document.getElementById('content-space');
 let tradeCount = 1;
-
-
+let previousTrades =[];
 
 
 
@@ -102,14 +101,21 @@ function displayTrade (trade) {
 
 async function fetchPreviousTrades () {
     try {
-        const previousTrades = await axios.get('/api/previousTrades');
+        previousTrades = await axios.get('/api/previousTrades');
         console.log("Previous Trades: ", previousTrades);
+        while (tradeCount <= previousTrades.length) {
+            displayTrade(previousTrades[tradeCount]);
+        }
     } catch (error) {
         console.error('Error fetching data: ', error);
     }
 }
 
+
+
+
 fetchPreviousTrades();
+
 
 
 
