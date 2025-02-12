@@ -21,7 +21,6 @@ let tradeCount = 1;
 
 
 
-
 function displayTrade (trade) {
     const tradeHTML = `
     <div class="trade" id="trade">
@@ -99,6 +98,25 @@ function displayTrade (trade) {
 
 
 
+// Display all previous trades when starting
+
+async function fetchPreviousTrades () {
+    try {
+        const previousTrades = await axios.get('/api/previousTrades');
+        console.log("Previous Trades: ", previousTrades);
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+    }
+}
+
+fetchPreviousTrades();
+
+
+
+
+
+
+
 
 
 
@@ -140,6 +158,7 @@ uploadBox.addEventListener('drop', (event) => {
 
     handleFiles(event.dataTransfer.files);
 });
+
 
 
 
