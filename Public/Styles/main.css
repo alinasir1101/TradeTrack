@@ -117,7 +117,7 @@ body {
 
 
 
-/* ---------------------------------------- Main content panel styling */
+/* ---------------------------------------- Main Header */
 
 
 
@@ -172,9 +172,9 @@ body {
 }
 
 .main .header .img-container img {
-    width: 32px;
+    width: 28px;
     height: auto;
-    margin: 5px auto;
+    margin: 5px auto 2px;
 }
 
 .header .img-container p {
@@ -227,13 +227,13 @@ body {
 .header div .manual-add {
     margin-top: 20px;
     margin-left: 20px;
-    padding: 12px 15px;
+    padding: 10px 12px;
     height: fit-content;
     border: 0;
     background-color: #339966;
     color: white;
     border-radius: 10px;
-    font-size: 15px;
+    font-size: 14px;
     display: grid;
 }
 
@@ -261,7 +261,7 @@ body {
 }
 
 .header div .analytic-btn img {
-    width: 28px;
+    width: 25px;
     height: auto;
 }
 
@@ -281,7 +281,7 @@ body {
 }
 
 .header div .data-setting img {
-    width: 28px;
+    width: 25px;
     height: auto;
     
 }
@@ -293,7 +293,7 @@ body {
     border-radius: 7px;
     /* width: fit-content; */
     margin: 12px;
-    padding: 2px 4px 4px 4px;
+    padding: 2px 4px 2px 4px;
     margin-left: 0;
     color: white;
     align-items: center;
@@ -304,7 +304,7 @@ body {
 }
 
 .header div .export-xml img {
-    width: 28px;
+    width: 25px;
     height: auto;
     margin-right: 5px;
 }
