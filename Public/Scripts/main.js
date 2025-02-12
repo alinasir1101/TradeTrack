@@ -101,7 +101,8 @@ function displayTrade (trade) {
 
 async function fetchPreviousTrades () {
     try {
-        previousTrades = await axios.get('/api/previousTrades');
+        const res = await axios.get('/api/previousTrades');
+        previousTrades = res.data;
         console.log("Previous Trades: ", previousTrades);
         while (tradeCount <= previousTrades.length) {
             displayTrade(previousTrades[tradeCount]);

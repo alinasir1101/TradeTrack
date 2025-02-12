@@ -253,7 +253,7 @@ body {
     height: fit-content;
     margin: 12px;
     margin-left: 22px;
-    padding: 2px 2px 4px 2px;
+    padding: 2px 4px 4px 4px;
 }
 
 .main .header div .analytic-btn:hover {
