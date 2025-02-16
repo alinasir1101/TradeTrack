@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 require('dotenv').config({ path: './private.env' });
 
+
 // Set up Google Cloud Storage
 const { Storage } = require('@google-cloud/storage');
 let credentials;
@@ -93,8 +94,6 @@ const Trade = mongoose.model('Trade', tradeSchema);
 
 
 
-
-
 // Set up multer storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -104,6 +103,24 @@ const upload = multer({ storage: storage });
 let tradeId = 1;
 let strategyId = 1;
 let userId = 1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -------------------------------- Functions
+
+
+
+
 
 
 
@@ -132,7 +149,20 @@ async function uploadImage(buffer, destination) {
 
 
 
-// -------- APIs
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -------------------------------- APIs
 
 
 
