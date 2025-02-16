@@ -8,8 +8,7 @@ const path = require('path');
 require('dotenv').config({ path: './private.env' });
 
 
-// Set up Google Cloud Storage
-const { Storage } = require('@google-cloud/storage');
+// Set up Google Cloud
 let credentials;
 try {
     credentials = JSON.parse(Buffer.from(process.env.GOOGLE_CREDENTIALS_JSON, 'base64').toString('utf-8'));
@@ -17,9 +16,16 @@ try {
     console.error("Error parsing GOOGLE_CREDENTIALS_JSON:", error);
     process.exit(1); // Exit the process with a non-zero status code
 }
+
+// Google Cloud Storage
+const { Storage } = require('@google-cloud/storage');
 const gStorage = new Storage({ credentials });
 const bucketName = "tradetrack-bucket";
 const bucket = gStorage.bucket(bucketName);
+
+// Google Cloud Vision
+const vision = require('@google-cloud/vision');
+const client = new vision.ImageAnnotatorClient({ credentials });
 
 
 
@@ -146,6 +152,24 @@ async function uploadImage(buffer, destination) {
 
 
 
+// Extract Text from Screenshot
+function extractText(imagePath) {
+    // Read image and send it to Google Vision API
+    const [result] = client.textDetection(imagePath);
+    const texts = result.textAnnotations;
+
+    if (!texts.length) {
+        console.log("No text found.");
+        return null;
+    }
+
+    console.log("Extracted Text:");
+    console.log(texts.map(text => text.description).join("\n"));
+
+    // return texts.map(text => text.description);
+}
+
+
 
 
 
@@ -198,6 +222,8 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         return res.status(400).json({ error: 'No file uploaded' });
     }
 
+
+    // Upload to Cloud Storage
     const buffer = req.file.buffer;
     const destination = `uploads/${tradeId}-${req.file.originalname}`;
 
@@ -208,9 +234,18 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         return;
     }
 
+
+    
+    // Extract Info from Image
+    currentURL = "https://storage.googleapis.com/tradetrack-bucket/" + destination;
+    extractText(currentURL).catch(console.error);
+
+
+
+
+    // Save to Database
     try {
-        // Save to Database
-        currentURL = "https://storage.googleapis.com/tradetrack-bucket/" + destination;
+
         const newTrade = await Trade.create({
             tradeId: tradeId,
             strategyId: strategyId,
@@ -233,6 +268,7 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         // Log the newTrade object for debugging
         console.log('New Trade:', newTrade);
         res.status(200).json(newTrade);
+
     } catch (err) {
         console.log("Error saving data: ", err)
     }
