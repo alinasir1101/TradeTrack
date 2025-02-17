@@ -29,7 +29,7 @@ const client = new vision.ImageAnnotatorClient({ credentials });
 
 
 
-const DB_URI = process.env.DB_URI;
+
 
 const app = express();
 console.log('Hi');
@@ -48,6 +48,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'Views', 'main.html'));
 });
 
+
+
+// DB
+const DB_URI = process.env.DB_URI;
 
 // Connect to MongoDB Atlas
 mongoose.connect(DB_URI).then(() => console.log('MongoDB connected'))
@@ -109,7 +113,19 @@ const upload = multer({ storage: storage });
 let tradeId = 1;
 let strategyId = 1;
 let userId = 1;
-
+let pairName;
+let outcome;
+let date;
+let time;
+let session;
+let timeframe;
+let RRR;
+let orderType;
+let entryLevel;
+let tp;
+let sl;
+let confluences;
+let imageURL;
 
 
 
@@ -153,9 +169,9 @@ async function uploadImage(buffer, destination) {
 
 
 // Extract Text from Screenshot
-function extractText(imagePath) {
+async function extractText(imagePath) {
     // Read image and send it to Google Vision API
-    const [result] = client.textDetection(imagePath);
+    const [result] = await client.textDetection(imagePath);
     const texts = result.textAnnotations;
 
     if (!texts.length) {
@@ -164,7 +180,31 @@ function extractText(imagePath) {
     }
 
     console.log("Extracted Text:");
-    console.log(texts.map(text => text.description).join("\n"));
+    let textString = texts.map(text => text.description).join(" ");
+    // console.log(textString);
+
+
+    // Extract date
+    const dateMatch = textString.match(/,\s*([A-Za-z]+ \d{2}, \d{4})/);
+    date = dateMatch ? dateMatch[1] : null;
+
+    // Extract time
+    const timeMatch = textString.match(/(\d{2}:\d{2})\s+UTC/);
+    time = timeMatch ? timeMatch[1] : null;
+
+    // Extract pair name
+    const pairNameMatch = textString.match(/\n(.+?),/);
+    pairName = pairNameMatch ? pairNameMatch[1] : null;
+
+    // Extract timeframe (handles 5, 1h, 4h, 1D, 1W, etc.)
+    const timeframeMatch = textString.match(/\n[^,]+,\s*([\w\d]+)/);
+    timeframe = timeframeMatch ? timeframeMatch[1] : null;
+
+    console.log({ date, time, pairName, timeframe });
+
+
+
+
 
     // return texts.map(text => text.description);
 }
@@ -238,7 +278,7 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
     
     // Extract Info from Image
     currentURL = "https://storage.googleapis.com/tradetrack-bucket/" + destination;
-    extractText(currentURL).catch(console.error);
+    await extractText(currentURL).catch(console.error);
 
 
 
@@ -250,12 +290,12 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
             tradeId: tradeId,
             strategyId: strategyId,
             userId: userId,
-            pairName: "",
+            pairName: pairName,
             outcome: "",
-            date: "",
-            time: "",
+            date: date,
+            time: time,
             session: "",
-            timeframe: "",
+            timeframe: timeframe,
             RRR: "1:2",
             orderType: "Limit",
             entryLevel: "",
