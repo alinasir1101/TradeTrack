@@ -34,7 +34,7 @@ function displayTrade (trade) {
             <div>
                 <p>
                     <span class="pair-txt"><strong>Pair:</strong></span>
-                    <span class="pair-name"></span>
+                    <span class="pair-name">${trade.pairName}</span>
                     <span class="space"></span>
 
                     <span class="outcome-txt"><strong>Outcome:</strong></span>
@@ -42,11 +42,11 @@ function displayTrade (trade) {
                     <span class="space"></span>
 
                     <span class="date-txt"><strong>Date:</strong></span>
-                    <span class="date"></span>
+                    <span class="date">${trade.date}</span>
                     <span class="space"></span>
 
                     <span class="time-txt"><strong>Time:</strong></span>
-                    <span class="time"></span>
+                    <span class="time">${trade.time}</span>
                     <span class="space"></span>
 
                     <span class="session-txt"><strong>Session:</strong></span>
@@ -74,7 +74,7 @@ function displayTrade (trade) {
                     <span class="space"></span>
 
                     <span class="timeframe-txt"><strong>Timeframe:</strong></span>
-                    <span class="timeframe"></span>
+                    <span class="timeframe">${trade.timeframe}</span>
                     <span class="space"></span>
 
                     <span class="confluences-txt"><strong>Confluences:</strong></span>

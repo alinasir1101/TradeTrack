@@ -87,7 +87,7 @@ const tradeSchema = new mongoose.Schema({
     userId: {type: Number},
     pairName: {type: String},
     outcome: {type: String},
-    date: {type: Date},
+    date: {type: String},
     time: {type: String},
     session: {type: String},
     timeframe: {type: String},
