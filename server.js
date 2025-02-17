@@ -321,6 +321,26 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
 
 
+// Delete trade route
+app.delete('/api/deleteTrade/:tradeId', async (req, res) => {
+    const tradeId = req.params.tradeId;
+
+    try {
+        await Trade.deleteOne({ tradeId: tradeId });
+        res.status(200).json({ message: 'Trade deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting trade:', error);
+        res.status(500).json({ error: 'Failed to delete trade' });
+    }
+});
+
+
+
+
+
+
+
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });

@@ -28,7 +28,7 @@ function displayTrade (trade) {
             <div class="title">
                 <div class="trade-num"><h3>Trade <span class="num">${tradeCount}</span></h3></div>
                 <button class="edit"><img src="../Assets/Edit.png" alt="Edit"></button>
-                <button class="delete"><img src="../Assets/Delete.png" alt=""></button>
+                <button class="delete" data-trade-id="${trade.tradeId}"><img src="../Assets/Delete.png" alt=""></button>
             </div>
                     
             <div>
@@ -89,6 +89,27 @@ function displayTrade (trade) {
 
     contentSpace.insertAdjacentHTML('afterend', tradeHTML);
     tradeCount ++;
+
+
+    // Add event listener for the delete button
+    const deleteButton = document.querySelector(`#trade-${trade.tradeId} .delete`);
+    deleteButton.addEventListener('click', async () => {
+        const tradeId = deleteButton.getAttribute('data-trade-id');
+        try {
+            const response = await fetch(`/api/deleteTrade/${tradeId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                console.log(`Trade ${tradeId} deleted successfully`);
+                fetchPreviousTrades(); // Refresh the trades list
+            } else {
+                console.error(`Failed to delete trade ${tradeId}`);
+            }
+        } catch (error) {
+            console.error(`Error deleting trade ${tradeId}:`, error);
+        }
+    });
 
 }
 
@@ -186,16 +207,6 @@ function handleFiles(files) {
     // Preview and upload each file
     fileArray.forEach((file) => {
         if (file.type.startsWith('image/')) {
-
-            // // Preview the image
-            // const reader = new FileReader();
-            // reader.onload = (e) => {
-            //     const img = document.createElement('img');
-            //     img.src = e.target.result;
-            //     img.alt = 'Preview';
-            //     preview.appendChild(img);
-            // };
-            // reader.readAsDataURL(file);
 
             
 
