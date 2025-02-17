@@ -265,6 +265,30 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
     }
 
 
+
+
+
+    // Read and Update lastTradeId
+    try {
+        let strategy = await Strategy.findOneAndUpdate(
+            { userId: userId, strategyId: strategyId },
+            { $inc: { lastTradeId: 1 } },
+            { new: true, upsert: true } // Create the document if it doesn't exist
+        );
+    
+        tradeId = strategy.lastTradeId;
+    
+        console.log('Update Successful');
+    } catch (err) {
+        console.error('Error:', err);
+    }
+
+
+
+
+
+
+
     // Upload to Cloud Storage
     const buffer = req.file.buffer;
     const destination = `uploads/${tradeId}-${req.file.originalname}`;
@@ -278,25 +302,7 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
     
 
-    // Read and Update lastTradeId
-    try {
-        const strategy = await Strategy.findOne({ userId: userId, strategyId: strategyId });
     
-        if (!strategy) {
-            console.log('Strategy document not found.');
-        }
-    
-        tradeId = strategy.lastTradeId + 1;
-    
-        const result = await Strategy.updateOne(
-            { userId: userId, strategyId: strategyId },
-            { lastTradeId: tradeId }
-        );
-    
-        console.log('Update Successful:', result);
-    } catch (err) {
-        console.error('Error:', err);
-    }
     
 
 
