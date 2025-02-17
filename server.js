@@ -64,7 +64,8 @@ const userSchema = new mongoose.Schema({
     email: {type: String, unique: true},
     password: {type: String},
     timeZone: {type: String},
-    startegiesList: {type: Array}
+    startegiesList: {type: Array},
+    lastStrategyId: {type: Number}
 });
 const User = mongoose.model('User', userSchema);
 
@@ -77,6 +78,7 @@ const strategySchema = new mongoose.Schema({
     visibleData: {type: Array},
     numOfTrades: {type: Number},
     numOfProfitableTrades: {type: Number},
+    lastTradeId: {type: Number}
 });
 const Strategy = mongoose.model('Strategy', strategySchema);
 
@@ -110,7 +112,7 @@ const upload = multer({ storage: storage });
 
 
 
-let tradeId = 1;
+let tradeId;
 let strategyId = 1;
 let userId = 1;
 let pairName;
@@ -273,6 +275,30 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         res.status(500).send('Error uploading file: ' + error.message);
         return;
     }
+
+    
+
+    // Read and Update lastTradeId
+    try {
+        const strategy = await Strategy.findOne({ userId: userId, strategyId: strategyId });
+    
+        if (!strategy) {
+            throw new Error('Strategy document not found');
+        }
+    
+        const tradeId = strategy.lastTradeId + 1;
+    
+        const result = await Strategy.updateOne(
+            { userId: userId, strategyId: strategyId },
+            { lastTradeId: tradeId }
+        );
+    
+        console.log('Update Successful:', result);
+    } catch (err) {
+        console.error('Error:', err);
+    }
+    
+
 
 
     

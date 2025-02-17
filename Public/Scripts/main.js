@@ -22,7 +22,7 @@ let previousTrades =[];
 
 function displayTrade (trade) {
     const tradeHTML = `
-    <div class="trade" id="trade">
+    <div class="trade" id="trade-${trade.tradeId}">
         <div class="info">
 
             <div class="title">
@@ -102,7 +102,7 @@ function displayTrade (trade) {
 
             if (response.ok) {
                 console.log(`Trade ${tradeId} deleted successfully`);
-                fetchPreviousTrades(); // Refresh the trades list
+                location.reload();
             } else {
                 console.error(`Failed to delete trade ${tradeId}`);
             }
