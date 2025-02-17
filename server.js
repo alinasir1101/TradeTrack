@@ -283,10 +283,10 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         const strategy = await Strategy.findOne({ userId: userId, strategyId: strategyId });
     
         if (!strategy) {
-            throw new Error('Strategy document not found');
+            console.log('Strategy document not found.');
         }
     
-        const tradeId = strategy.lastTradeId + 1;
+        tradeId = strategy.lastTradeId + 1;
     
         const result = await Strategy.updateOne(
             { userId: userId, strategyId: strategyId },
