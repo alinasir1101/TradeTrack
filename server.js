@@ -5,6 +5,7 @@ const cors = require('cors');
 const multer = require('multer');
 const mongoose = require('mongoose');
 const path = require('path');
+const cookieParser = require("cookie-parser");
 require('dotenv').config({ path: './private.env' });
 
 // User Auth
@@ -43,13 +44,15 @@ let currentTradeId = "none";
 let currentURL;
 
 // Middleware setup
-app.use(cors({})); // Enable Cross-Origin Resource Sharing
+app.use(cors({
+    credentials: true // Allow cookies
+})); // Enable Cross-Origin Resource Sharing
 app.use(bodyParser.json()); // Parse JSON payloads in requests
 app.use(express.json()); // Parse JSON payloads
 app.use("/public", express.static(__dirname + "/Public"));
 app.use("/assets", express.static(__dirname + "/Assets"));
 app.use(passport.initialize());
-
+app.use(cookieParser()); // Required to read cookies
 
 
 
@@ -185,8 +188,10 @@ passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
 
 // JWT Middleware
 const jwtMiddleware = (req, res, next) => {
-    const token = req.cookies.token;
-    if (!token) { //stuck here
+    // gets token from browser's cookies
+    const token = req.cookies?.token; // '?' Optional chaining to prevent errors
+    
+    if (!token) { 
         console.log('No Token');
         return res.redirect('/login');
     }
@@ -247,7 +252,7 @@ app.post('/api/login', async (req, res) => {
             maxAge: 24 * 60 * 60 * 1000 // 1 day
         });
 
-        // res.status(200).json({ token });
+        res.status(200).json({ token });
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
     }

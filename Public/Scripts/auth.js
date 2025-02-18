@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({ email, password })
                 });
 
-                // const data = await response.json();
+                const data = await response.json();
                 if (response.ok) {
                     console.log('Login successful');
-                    // window.location.href = '/';
+                    window.location.href = '/';
                 } else {
                     alert(data.error);
                 }
@@ -55,29 +55,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
-    // Add Event Listener to all protected links to attach token
-    document.querySelectorAll('.protected-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const token = localStorage.getItem('token');
-            if (token) {
-                fetch(link.href, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                })
-                .then(response => response.text())
-                .then(data => {
-                    document.open();
-                    document.write(data);
-                    document.close();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    window.location.href = '/login';
-                });
-            } else {
-                window.location.href = '/login';
-            }
-        });
-    });
+    
 });
