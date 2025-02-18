@@ -15,6 +15,54 @@ let tradeCount = 1;
 let previousTrades =[];
 
 
+const deleteModal = document.getElementById('deleteModal');
+const confirmDelete = document.getElementById('confirmDelete');
+const cancelDelete = document.getElementById('cancelDelete');
+let tradeIdToDelete = null;
+
+
+cancelDelete.onclick = function() {
+    deleteModal.style.display = 'none';
+};
+
+window.onclick = function(event) {
+    if (event.target == deleteModal) {
+        deleteModal.style.display = 'none';
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+confirmDelete.onclick = async function() {
+    if (tradeIdToDelete) {
+        try {
+            const response = await fetch(`/api/deleteTrade/${tradeIdToDelete}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                console.log(`Trade ${tradeIdToDelete} deleted successfully`);
+                location.reload();
+            } else {
+                console.error(`Failed to delete trade ${tradeIdToDelete}`);
+            }
+        } catch (error) {
+            console.error(`Error deleting trade ${tradeIdToDelete}:`, error);
+        } finally {
+            deleteModal.style.display = 'none';
+        }
+    }
+};
+
 
 
 
@@ -93,23 +141,31 @@ function displayTrade (trade) {
 
     // Add event listener for the delete button
     const deleteButton = document.querySelector(`#trade-${trade.tradeId} .delete`);
-    deleteButton.addEventListener('click', async () => {
-        const tradeId = deleteButton.getAttribute('data-trade-id');
-        try {
-            const response = await fetch(`/api/deleteTrade/${tradeId}`, {
-                method: 'DELETE'
-            });
-
-            if (response.ok) {
-                console.log(`Trade ${tradeId} deleted successfully`);
-                location.reload();
-            } else {
-                console.error(`Failed to delete trade ${tradeId}`);
-            }
-        } catch (error) {
-            console.error(`Error deleting trade ${tradeId}:`, error);
-        }
+    deleteButton.addEventListener('click', () => {
+        tradeIdToDelete = deleteButton.getAttribute('data-trade-id');
+        deleteModal.style.display = 'block';
     });
+
+
+    // Add event listener for the delete button
+    // const deleteButton = document.querySelector(`#trade-${trade.tradeId} .delete`);
+    // deleteButton.addEventListener('click', async () => {
+    //     const tradeId = deleteButton.getAttribute('data-trade-id');
+    //     try {
+    //         const response = await fetch(`/api/deleteTrade/${tradeId}`, {
+    //             method: 'DELETE'
+    //         });
+
+    //         if (response.ok) {
+    //             console.log(`Trade ${tradeId} deleted successfully`);
+    //             location.reload();
+    //         } else {
+    //             console.error(`Failed to delete trade ${tradeId}`);
+    //         }
+    //     } catch (error) {
+    //         console.error(`Error deleting trade ${tradeId}:`, error);
+    //     }
+    // });
 
 }
 
@@ -126,7 +182,7 @@ async function fetchPreviousTrades () {
         previousTrades = res.data;
         console.log("Previous Trades: ", previousTrades);
         while (tradeCount <= previousTrades.length) {
-            displayTrade(previousTrades[tradeCount]);
+            displayTrade(previousTrades[tradeCount-1]);
         }
     } catch (error) {
         console.error('Error fetching data: ', error);
@@ -201,52 +257,37 @@ uploadBox.addEventListener('drop', (event) => {
 
 // Function to handle multiple file uploads
 
-function handleFiles(files) {
+async function handleFiles(files) {
     const fileArray = Array.from(files); // Convert FileList to Array
 
-    // Preview and upload each file
-    fileArray.forEach((file) => {
+    // Sequentially upload each file
+    for (const file of fileArray) {
         if (file.type.startsWith('image/')) {
-
-            
-
-
-
             const formData = new FormData();
             formData.append('image', file);
 
-            
-            // Simulate file upload (replace with actual server endpoint)
-            fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
-                // mode: 'no-cors'
-            })
-            
-                .then(response => {
-                // Ensure the response is ok
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json(); // Parse the JSON from the response
-                })
-                .then((data) => {
-                    console.log(`File "${file.name}" uploaded successfully!`, data);
-                    const newTrade = data;
-                    console.log(`Trade: ${newTrade}, Image: ${newTrade.imageURL}`);
-                    displayTrade(newTrade);
-                })
-                .catch(error => {
-                    console.error(`Error uploading file "${file.name}":`, error);
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData,
                 });
 
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                console.log(`File "${file.name}" uploaded successfully!`, data);
+                const newTrade = data;
+                console.log(`Trade: ${newTrade}, Image: ${newTrade.imageURL}`);
+                displayTrade(newTrade);
+            } catch (error) {
+                console.error(`Error uploading file "${file.name}":`, error);
+            }
         } else {
             alert(`"${file.name}" is not a valid image file.`);
         }
-        
-
-        
-    });
+    }
 }
 
 
