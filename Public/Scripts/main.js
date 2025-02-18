@@ -147,26 +147,6 @@ function displayTrade (trade) {
     });
 
 
-    // Add event listener for the delete button
-    // const deleteButton = document.querySelector(`#trade-${trade.tradeId} .delete`);
-    // deleteButton.addEventListener('click', async () => {
-    //     const tradeId = deleteButton.getAttribute('data-trade-id');
-    //     try {
-    //         const response = await fetch(`/api/deleteTrade/${tradeId}`, {
-    //             method: 'DELETE'
-    //         });
-
-    //         if (response.ok) {
-    //             console.log(`Trade ${tradeId} deleted successfully`);
-    //             location.reload();
-    //         } else {
-    //             console.error(`Failed to delete trade ${tradeId}`);
-    //         }
-    //     } catch (error) {
-    //         console.error(`Error deleting trade ${tradeId}:`, error);
-    //     }
-    // });
-
 }
 
 
