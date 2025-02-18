@@ -7,6 +7,11 @@ const mongoose = require('mongoose');
 const path = require('path');
 require('dotenv').config({ path: './private.env' });
 
+// User Auth
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+
 
 // Set up Google Cloud
 let credentials;
@@ -43,10 +48,9 @@ app.use(bodyParser.json()); // Parse JSON payloads in requests
 app.use(express.json()); // Parse JSON payloads
 app.use("/public", express.static(__dirname + "/Public"));
 app.use("/assets", express.static(__dirname + "/Assets"));
+app.use(passport.initialize());
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Views', 'main.html'));
-});
+
 
 
 
@@ -63,6 +67,7 @@ const userSchema = new mongoose.Schema({
     name: {type: String},
     email: {type: String, unique: true},
     password: {type: String},
+    googleId: {type: String},
     timeZone: {type: String},
     startegiesList: {type: Array},
     lastStrategyId: {type: Number}
@@ -128,6 +133,160 @@ let tp;
 let sl;
 let confluences;
 let imageURL;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// --------------------------- User Auth
+
+
+
+
+
+
+
+
+
+
+
+
+// Passport JWT Strategy
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
+
+const opts = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: process.env.JWT_SECRET
+};
+
+passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
+    User.findById(jwt_payload.id, (err, user) => {
+        if (err) {
+            return done(err, false);
+        }
+        if (user) {
+            return done(null, user);
+        } else {
+            return done(null, false);
+        }
+    });
+}));
+
+// Passport Google OAuth Strategy
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback"
+}, (accessToken, refreshToken, profile, done) => {
+    User.findOne({ googleId: profile.id }, (err, user) => {
+        if (err) return done(err);
+        if (!user) {
+            user = new User({
+                googleId: profile.id,
+                name: profile.displayName,
+                email: profile.emails[0].value
+            });
+            user.save((err) => {
+                if (err) return done(err);
+                return done(null, user);
+            });
+        } else {
+            return done(null, user);
+        }
+    });
+}));
+
+// JWT Middleware
+const jwtMiddleware = (req, res, next) => {
+    const token = req.headers['authorization'];
+    if (!token) {
+        return res.redirect('/login');
+    }
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.redirect('/login');
+        }
+        req.userId = decoded.id;
+        next();
+    });
+};
+
+// Routes
+app.post('/register', async (req, res) => {
+    const { name, email, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({
+        name,
+        email,
+        password: hashedPassword
+    });
+
+    try {
+        await newUser.save();
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+        res.status(400).json({ error: 'Email already exists' });
+    }
+});
+
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ error: 'User not found' });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ error: 'Invalid credentials' });
+        }
+
+        const payload = { id: user.id, name: user.name };
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        res.status(200).json({ token });
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+    const payload = { id: req.user.id, name: req.user.name };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.redirect(`/?token=${token}`);
+});
+
+app.get('/', jwtMiddleware, (req, res) => {
+    res.sendFile(path.join(__dirname, 'Views', 'main.html'));
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Views', 'login.html'));
+});
+
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Views', 'signup.html'));
+});
+
 
 
 
