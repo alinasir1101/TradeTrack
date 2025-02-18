@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // CHANGED: Prevent default form submission
+            e.preventDefault(); // Prevent default form submission
             const email = loginForm.email.value;
             const password = loginForm.password.value;
 
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (signupForm) {
         signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // CHANGED: Prevent default form submission
+            e.preventDefault(); // Prevent default form submission
             const name = signupForm.name.value;
             const email = signupForm.email.value;
             const password = signupForm.password.value;

@@ -67,7 +67,6 @@ const userSchema = new mongoose.Schema({
     name: {type: String},
     email: {type: String, unique: true},
     password: {type: String},
-    googleId: {type: String},
     timeZone: {type: String},
     startegiesList: {type: Array},
     lastStrategyId: {type: Number}
@@ -161,6 +160,7 @@ let imageURL;
 
 
 
+
 // Passport JWT Strategy
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
@@ -170,49 +170,16 @@ const opts = {
     secretOrKey: process.env.JWT_SECRET
 };
 
-passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
-    User.findById(jwt_payload.id, (err, user) => {
-        if (err) {
-            return done(err, false);
-        }
+passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
+    try {
+        const user = await User.findById(jwt_payload.id);
         if (user) {
             return done(null, user);
         } else {
             return done(null, false);
         }
-    });
-}));
-
-// Passport Google OAuth Strategy
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback"
-}, async (accessToken, refreshToken, profile, done) => {
-    try {
-        let user = await User.findOne({ googleId: profile.id });
-        if (!user) {
-            // CHANGED: Check if a user with the same email already exists
-            user = await User.findOne({ email: profile.emails[0].value });
-            if (user) {
-                // CHANGED: If user exists, update the Google ID
-                user.googleId = profile.id;
-                await user.save();
-            } else {
-                // CHANGED: If user does not exist, create a new user
-                user = new User({
-                    googleId: profile.id,
-                    name: profile.displayName,
-                    email: profile.emails[0].value
-                });
-                await user.save();
-            }
-        }
-        return done(null, user);
     } catch (err) {
-        return done(err);
+        return done(err, false);
     }
 }));
 
@@ -230,6 +197,9 @@ const jwtMiddleware = (req, res, next) => {
         next();
     });
 };
+
+
+
 
 // Routes
 app.post('/register', async (req, res) => {
@@ -273,15 +243,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-    const payload = { id: req.user.id, name: req.user.name };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-    res.redirect(`/?token=${token}`);
-});
-
 app.get('/', jwtMiddleware, (req, res) => {
     res.sendFile(path.join(__dirname, 'Views', 'main.html'));
 });
@@ -293,7 +254,6 @@ app.get('/login', (req, res) => {
 app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, 'Views', 'signup.html'));
 });
-
 
 
 
