@@ -192,22 +192,29 @@ passport.use(new GoogleStrategy({
     callbackURL: "/auth/google/callback"
 }, async (accessToken, refreshToken, profile, done) => {
     try {
-        // CHANGED: Using async/await instead of callbacks for Mongoose queries
         let user = await User.findOne({ googleId: profile.id });
         if (!user) {
-            user = new User({
-                googleId: profile.id,
-                name: profile.displayName,
-                email: profile.emails[0].value
-            });
-            await user.save();
+            // CHANGED: Check if a user with the same email already exists
+            user = await User.findOne({ email: profile.emails[0].value });
+            if (user) {
+                // CHANGED: If user exists, update the Google ID
+                user.googleId = profile.id;
+                await user.save();
+            } else {
+                // CHANGED: If user does not exist, create a new user
+                user = new User({
+                    googleId: profile.id,
+                    name: profile.displayName,
+                    email: profile.emails[0].value
+                });
+                await user.save();
+            }
         }
         return done(null, user);
     } catch (err) {
         return done(err);
     }
 }));
-
 
 // JWT Middleware
 const jwtMiddleware = (req, res, next) => {
