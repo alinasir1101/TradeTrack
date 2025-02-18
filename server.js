@@ -185,8 +185,8 @@ passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
 
 // JWT Middleware
 const jwtMiddleware = (req, res, next) => {
-    const token = req.headers['authorization'];
-    if (!token) {
+    const token = req.cookies.token;
+    if (!token) { //stuck here
         console.log('No Token');
         return res.redirect('/login');
     }
@@ -195,6 +195,7 @@ const jwtMiddleware = (req, res, next) => {
             console.log('User not authorised');
             return res.redirect('/login');
         }
+        console.log('Token verified, user authorized');
         req.userId = decoded.id;
         next();
     });
@@ -222,7 +223,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
@@ -238,8 +239,15 @@ app.post('/login', async (req, res) => {
 
         const payload = { id: user.id, name: user.name };
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+        // Server-side (Express.js with `cookie-parser`)
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,  // Use HTTPS
+            sameSite: "strict", // Prevent CSRF
+            maxAge: 24 * 60 * 60 * 1000 // 1 day
+        });
 
-        res.status(200).json({ token });
+        // res.status(200).json({ token });
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
     }
