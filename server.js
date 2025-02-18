@@ -187,10 +187,12 @@ passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
 const jwtMiddleware = (req, res, next) => {
     const token = req.headers['authorization'];
     if (!token) {
+        console.log('No Token');
         return res.redirect('/login');
     }
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
+            console.log('User not authorised');
             return res.redirect('/login');
         }
         req.userId = decoded.id;
