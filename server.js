@@ -190,24 +190,24 @@ passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "/auth/google/callback"
-}, (accessToken, refreshToken, profile, done) => {
-    User.findOne({ googleId: profile.id }, (err, user) => {
-        if (err) return done(err);
+}, async (accessToken, refreshToken, profile, done) => {
+    try {
+        // CHANGED: Using async/await instead of callbacks for Mongoose queries
+        let user = await User.findOne({ googleId: profile.id });
         if (!user) {
             user = new User({
                 googleId: profile.id,
                 name: profile.displayName,
                 email: profile.emails[0].value
             });
-            user.save((err) => {
-                if (err) return done(err);
-                return done(null, user);
-            });
-        } else {
-            return done(null, user);
+            await user.save();
         }
-    });
+        return done(null, user);
+    } catch (err) {
+        return done(err);
+    }
 }));
+
 
 // JWT Middleware
 const jwtMiddleware = (req, res, next) => {
