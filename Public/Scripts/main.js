@@ -82,55 +82,30 @@ function displayTrade (trade) {
                 <button class="delete" data-trade-id="${trade.tradeId}"><img src="../Assets/Delete.png" alt=""></button>
             </div>
                     
-            <div>
-                <p>
-                    <span class="pair-txt"><strong>Pair:</strong></span>
-                    <span class="pair-name">${trade.pairName}</span>
-                    <span class="space"></span>
+            <div class="details">
+                <div class="pair-txt data">Pair: <div class="pair-name value">${trade.pairName}</div></div>
 
-                    <span class="outcome-txt"><strong>Outcome:</strong></span>
-                    <span class="outcome"></span>
-                    <span class="space"></span>
+                <div class="outcome-txt data">Outcome: <button class="outcome value">Profit</button></div>
 
-                    <span class="date-txt"><strong>Date:</strong></span>
-                    <span class="date">${trade.date}</span>
-                    <span class="space"></span>
+                <div class="date-txt data">Date: <div class="date value">${trade.date}</div></div>
 
-                    <span class="time-txt"><strong>Time:</strong></span>
-                    <span class="time">${trade.time}</span>
-                    <span class="space"></span>
+                <div class="time-txt data">Time: <div class="time value">${trade.time}</div></div>
 
-                    <span class="session-txt"><strong>Session:</strong></span>
-                    <span class="session"></span>
-                    <span class="space"></span>
+                <div class="session-txt data">Session: <div class="session value">London</div></div>
 
-                    <span class="rrr-txt"><strong>Risk-to-Reward Ratio:</strong></span>
-                    <span class="rrr">1:2</span>
-                    <span class="space"></span>
+                <div class="rrr-txt">Risk-to-Reward Ratio: <div class="rrr value">1:2</div></div>
 
-                    <span class="position-txt"><strong>Position:</strong></span>
-                    <span class="position"></span>
-                    <span class="space"></span>
+                <div class="position-txt data">Position: <button class="position value">Long</button></div>
 
-                    <span class="order-type-txt"><strong>Order Type:</strong></span>
-                    <span class="order-type">Limit Order</span>
-                    <span class="space"></span>
+                <div class="order-type-txt data">Order Type: <button class="order-type value">Limit Order</button></div>
 
-                    <span class="entry-text"><strong>Entry Level:</strong></span>
-                    <span class="entry"></span>
-                    <span class="space"></span>
+                <div class="entry-text data">Entry Level: <div class="entry value">1.23</div></div>
 
-                    <span class="exit-txt"><strong>Exit Level:</strong></span>
-                    <span class="exit"></span>
-                    <span class="space"></span>
+                <div class="exit-txt data">Exit Level: <div class="exit value">2.34</div></div>
 
-                    <span class="timeframe-txt"><strong>Timeframe:</strong></span>
-                    <span class="timeframe">${trade.timeframe}</span>
-                    <span class="space"></span>
+                <div class="timeframe-txt data">Timeframe: <div class="timeframe value">${trade.timeframe}</div></div>
 
-                    <span class="confluences-txt"><strong>Confluences:</strong></span>
-                    <span class="confluences"></span>
-                </p>
+                <div class="confluences-txt data">Confluences: <div class="confluences value">Double top</div></div>
             </div>
                     
         </div>

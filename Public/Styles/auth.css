@@ -24,7 +24,7 @@ body {
 
 
 input {
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     margin-top: 5px;
     color: white;
     padding: 5px;
@@ -50,6 +50,7 @@ button:hover {
 
 a {
     color: #3bbd7c;
+    text-decoration: none;
 }
 
 .logo {
@@ -76,9 +77,6 @@ p {
     justify-content: end;
 }
 
-label {
-    margin-bottom: 50px;
-}
 
 
 

@@ -44,17 +44,28 @@
     <div class="main">
         <div class="header">
             <img class="logo" src="../Assets/Logo dark no bg.png" alt="TradeTrack Logo">
+
+            <div class="set-details">
+                <input class="set-name" type="text" placeholder="Set's Name" size="23"/>
+                <textarea class="set-description" placeholder="Set's Description" rows="4" cols="25"></textarea>
+            </div>
+
             <div class="img-container" id="img-container">
                 <img src="../Assets/Img.png" alt="Image Upload">
                 <p>Drag and Drop Image or Simply</p>
                 <button class="browse-btn" id="browse-btn">Browse</button>
                 <input type="file" id="file-input" accept="image/*" multiple style="display: none;">
             </div>
-            <div class="mobile-btns">
-                <button class="strategies-list"><img src="../Assets/List.png" alt="List"></button>
-                <button class="browse-btn" id="browse-btn2">Browse</button>
+
+            <div class="left-btns">
+                <div class="mobile-btns">
+                    <button class="sets-list"><img src="../Assets/List.png" alt="List"></button>
+                    <button class="browse-btn" id="browse-btn2">Browse</button>
+                </div>
+                <button class="info-btn"><img src="../Assets/info.png" alt="Info"></button>
             </div>
-            <button class="info-btn"><img src="../Assets/info.png" alt="Info"></button>
+            
+            
             <div class="other-buttons">
                 <button class="manual-add">
                     <p>Manually Add Trade</p>
@@ -70,8 +81,7 @@
         
 
         <div class="content">
-            <div class="space" id="content-space"></div>
-
+            <div class="content-space" id="content-space"></div>
 
 
             <!-- Modal -->
