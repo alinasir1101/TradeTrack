@@ -18,9 +18,12 @@
             <input type="email" id="email" name="email" required><br>
             <div>
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-                <button class="toggle-password" type="button" onclick="togglePassword()"><img src="../Assets/See Password.png" alt="See/Unsee" class="eye-img"></button><br>
+                <div>
+                    <input type="password" id="password" name="password" required size="15">
+                    <button class="toggle-password" type="button" onclick="togglePassword()"><img src="../Assets/See Password.png" alt="See/Unsee" class="eye-img"></button><br>
+                </div>
             </div>
+                
             <label for="country">Select Country:</label>
             <select name="country" id="country" class="country" required>
                 <option value="" selected disabled>Select</option>
