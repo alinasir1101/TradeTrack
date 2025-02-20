@@ -37,5 +37,6 @@ logOut.onclick = function () {
     .then(data => console.log(data.message))
     .catch(err => console.err(err));
 
-    window.location.href = '/';
+
+    window.location.href = '/login';
 }
