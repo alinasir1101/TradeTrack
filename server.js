@@ -64,35 +64,43 @@ const DB_URI = process.env.DB_URI;
 mongoose.connect(DB_URI).then(() => console.log('MongoDB connected'))
 .catch((err) => console.log(err));
 
+const systemSchema = new mongoose.Schema({
+    name: {type: String},
+    value: {type: Number},
+    string: {type: String}
+});
+const System = mongoose.model('System', systemSchema);
+
 // Define User Schema and Mongoose Model
 const userSchema = new mongoose.Schema({
     userId: {type: Number},
     name: {type: String},
     email: {type: String, unique: true},
     password: {type: String},
-    timeZone: {type: String},
-    startegiesList: {type: Array},
-    lastStrategyId: {type: Number}
+    country: {type: String},
+    currentSet: {type: String},   // Current set that is selected and displayed
+    setsList: {type: Array},
+    lastSetId: {type: Number}
 });
 const User = mongoose.model('User', userSchema);
 
 // Strategies
-const strategySchema = new mongoose.Schema({
-    strategyId: {type: Number},
+const setSchema = new mongoose.Schema({
+    setId: {type: Number},
     userId: {type: Number},
-    strategyName: {type: String},
+    setName: {type: String},
     tradesList: {type: Array},
-    visibleData: {type: Array},
+    visibleData: {type: Array}, // Trades data like order type etc
     numOfTrades: {type: Number},
     numOfProfitableTrades: {type: Number},
     lastTradeId: {type: Number}
 });
-const Strategy = mongoose.model('Strategy', strategySchema);
+const Set = mongoose.model('Set', setSchema);
 
 // Trades
 const tradeSchema = new mongoose.Schema({
     tradeId: {type: Number},
-    strategyId: {type: Number},
+    setId: {type: Number},
     userId: {type: Number},
     pairName: {type: String},
     outcome: {type: String},
@@ -120,7 +128,7 @@ const upload = multer({ storage: storage });
 
 
 let tradeId;
-let strategyId = 1;
+let setId = 1;
 let userId = 1;
 let pairName;
 let outcome;
@@ -209,8 +217,11 @@ const jwtMiddleware = (req, res, next) => {
 
 
 
+
+
+
 // Routes
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
     const { name, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -243,32 +254,32 @@ app.post('/api/login', async (req, res) => {
         }
 
         const payload = { id: user.id, name: user.name };
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '30d' });
         // Server-side (Express.js with `cookie-parser`)
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,  // Use HTTPS
             sameSite: "strict", // Prevent CSRF
-            maxAge: 24 * 60 * 60 * 1000 // 1 day
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 1 day
         });
 
-        res.status(200).json({ token });
+        res.json({ token });
     } catch (error) {
+        console.log('Error logging in: ', error);
         res.status(500).json({ error: 'Server error' });
     }
 });
 
-app.get('/', jwtMiddleware, (req, res) => {
-    res.sendFile(path.join(__dirname, 'Views', 'main.html'));
+app.post('/api/logout', (req, res) => {
+    res.clearCookie("token", {  
+        httpOnly: true,  
+        secure: true,  
+        sameSite: "strict",  
+        path: "/" // Ensure path matches the one set in `res.cookie()`
+    });  
+    res.status(200).json({ message: "Logged out" });
 });
 
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Views', 'login.html'));
-});
-
-app.get('/signup', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Views', 'signup.html'));
-});
 
 
 
@@ -283,6 +294,42 @@ app.get('/signup', (req, res) => {
 
 // -------------------------------- Functions
 
+
+
+
+
+
+
+
+
+
+
+
+const userMiddleware = async (req, res, next) => {
+    try {
+        const token = req.cookies?.token; // Extract token from cookie
+
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify and decode token
+        const userId = decoded.id;
+
+        const user = await User.findById(userId); // Await user fetch from DB
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        req.user = user; // Attach user info to req object - just assign req.user to var in any route
+
+        next(); 
+
+    } catch (error) {
+        console.error("Auth Middleware Error:", error);
+        return res.status(403).json({ message: "Invalid or expired token" });
+    }
+};
 
 
 
@@ -346,14 +393,55 @@ async function extractText(imagePath) {
     console.log({ date, time, pairName, timeframe });
 
 
-
-
-
     // return texts.map(text => text.description);
 }
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+// ----------------- Navigation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app.get('/', jwtMiddleware, (req, res) => {
+    res.sendFile(path.join(__dirname, 'Views', 'main.html'));
+});
+
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Views', 'login.html'));
+});
+
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Views', 'signup.html'));
+});
+
+
+app.get('/menu', jwtMiddleware, (req, res) => {
+    res.sendFile(path.join(__dirname, 'Views', 'menu.html'));
+});
 
 
 
@@ -373,6 +461,26 @@ async function extractText(imagePath) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Get User Info from Cookie token
+app.get("/api/getUserInfo", userMiddleware, (req, res) => {
+    let user = req.user;
+    console.log(user);
+    res.json(user);
+});
 
 
 
@@ -411,13 +519,13 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
     // Read and Update lastTradeId
     try {
-        let strategy = await Strategy.findOneAndUpdate(
-            { userId: userId, strategyId: strategyId },
+        let set = await Set.findOneAndUpdate(
+            { userId: userId, setId: setId },
             { $inc: { lastTradeId: 1 } },
             { new: true, upsert: true } // Create the document if it doesn't exist
         );
     
-        tradeId = strategy.lastTradeId;
+        tradeId = set.lastTradeId;
     
         console.log('Update Successful');
     } catch (err) {
@@ -461,10 +569,10 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
         const newTrade = await Trade.create({
             tradeId: tradeId,
-            strategyId: strategyId,
+            setId: setId,
             userId: userId,
             pairName: pairName,
-            outcome: "",
+            outcome: "None",
             date: date,
             time: time,
             session: "",

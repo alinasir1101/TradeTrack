@@ -1,0 +1,116 @@
+body {
+    display: flex;
+    height: 100vh; 
+    font-family: Arial, sans-serif;
+    background-color: #131313;
+    font-size: 14px;
+    color: white;
+    margin: 0;
+
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.signup-container, .login-container {
+    background-color: #222222;
+    height: fit-content;
+    width: 60%;
+    max-width: 400px;
+    min-width: 200px;
+    padding: 40px 30px;
+    border-radius: 30px;
+}
+
+
+input {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    color: white;
+    padding: 5px;
+    margin-left: 5px;
+    border: 0;
+    background-color: #131313;
+    border-radius: 5px;
+}
+
+button {
+    border: 0;
+    padding: 8px 10px;
+    border-radius: 5px;
+    color: white;
+    background-color: #0a794b;
+    margin: 10px 0px 0px 0px;
+    font-size: 15px;
+}
+
+button:hover {
+    background-color: #2b8357;
+}
+
+a {
+    color: #3bbd7c;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+}
+
+h2 {
+    margin-top: 5px;
+}
+
+img {
+    width: 150px;
+    height: auto;
+}
+
+p {
+    font-size: 13px;
+    margin-top: 10px;
+}
+
+.align {
+    display: flex;
+    justify-content: end;
+}
+
+label {
+    margin-bottom: 50px;
+}
+
+
+
+
+
+
+
+
+
+/* Webkit Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;  /* Thin vertical scrollbar */
+    height: 8px; /* Thin horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;  /* Dark track color */
+    border-radius: 10px; /* Rounded corners for the track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;  /* Dark thumb color */
+    border-radius: 10px; /* Rounded corners for the thumb */
+    border: 2px solid transparent;  /* Subtle border for better visibility */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #777;  /* Slightly lighter thumb on hover */
+}
+
+/* Optional: Style the corner where horizontal and vertical scrollbars meet */
+::-webkit-scrollbar-corner {
+    background: #222;
+}
+

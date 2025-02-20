@@ -3,6 +3,7 @@ const fileInput = document.getElementById('file-input');
 const browseButton = document.getElementById('browse-btn');
 const browseButton2 = document.getElementById('browse-btn2');
 const preview = document.getElementById('preview');
+const menuButton = document.getElementById('menu-btn')
 
 console.log("Hi! Welcome to TradeTrack.");
 
@@ -32,7 +33,9 @@ window.onclick = function(event) {
 };
 
 
-
+menuButton.onclick = function() {
+    window.location.href = "/menu"
+}
 
 
 

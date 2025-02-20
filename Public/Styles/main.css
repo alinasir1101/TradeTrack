@@ -185,7 +185,7 @@ body {
 .browse-btn {
     padding: 4px 10px;
     margin: 6px auto 10px;
-    background-color: #339966;
+    background-color: #0a794b;
     border: 0;
     border-radius: 6px;
     color: white;
@@ -230,7 +230,7 @@ body {
     padding: 10px 15px;
     height: fit-content;
     border: 0;
-    background-color: #339966;
+    background-color: #0a794b;
     color: white;
     border-radius: 10px;
     font-size: 14px;
@@ -337,6 +337,9 @@ body {
 
 
 
+
+
+
 /* Modal (background) */
 .modal {
     display: none; /* Hidden by default */
@@ -391,6 +394,7 @@ body {
 .modal #cancelDelete:hover {
     background-color: rgb(66, 66, 66);
 }
+
 
 
 
