@@ -222,13 +222,23 @@ const jwtMiddleware = (req, res, next) => {
 
 // Routes
 app.post('/api/register', async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, country } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const lastUserId = await System.findOneAndUpdate(
+        { name : "lastUserId" },
+        { $inc: {value: 1}},
+        {new:true, upsert:true}
+    );
+    userId = lastUserId.value;
+
+    
     const newUser = new User({
+        userId,
         name,
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        country
     });
 
     try {

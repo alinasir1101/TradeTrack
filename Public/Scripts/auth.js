@@ -34,12 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = signupForm.name.value;
             const email = signupForm.email.value;
             const password = signupForm.password.value;
+            const country = signupForm.country.value;
 
             try {
                 const response = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, password })
+                    body: JSON.stringify({ name, email, password, country })
                 });
 
                 const data = await response.json();
@@ -56,4 +57,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     
+
+    
 });
+
+function togglePassword() {
+    const passwordInput = document.getElementById("password");
+    const toggleButton = document.querySelector(".toggle-password");
+    const eyeImg = document.querySelector('.eye-img');
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        eyeImg.src = "../Assets/Unsee Password.png";
+    } else {
+        passwordInput.type = "password";
+        eyeImg.src = "../Assets/See Password.png";
+    }
+}

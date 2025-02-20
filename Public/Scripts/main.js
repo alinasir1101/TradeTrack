@@ -105,7 +105,8 @@ function displayTrade (trade) {
 
                 <div class="timeframe-txt data">Timeframe: <div class="timeframe value">${trade.timeframe}</div></div>
 
-                <div class="confluences-txt data">Confluences: <div class="confluences value">Double top</div></div>
+                
+                <div class="confluences-txt data">Confluences: <div class="confluences value">N/A</div></div>
             </div>
                     
         </div>

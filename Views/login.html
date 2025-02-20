@@ -14,8 +14,11 @@
         <form id="loginForm">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required><br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <button class="toggle-password" type="button" onclick="togglePassword()"><img src="../Assets/See Password.png" alt="See/Unsee" class="eye-img"></button><br>
+            </div>
             <button type="submit">Login</button>
         </form>
         <div class="align"><p>Don't have an account? <a href="/signup">Sign up</a></p></div>
