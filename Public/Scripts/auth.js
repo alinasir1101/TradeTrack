@@ -35,12 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = signupForm.email.value;
             const password = signupForm.password.value;
             const country = signupForm.country.value;
+            const dateJoined = new Date();
 
             try {
                 const response = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, password, country })
+                    body: JSON.stringify({ name, email, password, country, dateJoined })
                 });
 
                 const data = await response.json();

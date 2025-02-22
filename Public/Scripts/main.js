@@ -3,7 +3,14 @@ const fileInput = document.getElementById('file-input');
 const browseButton = document.getElementById('browse-btn');
 const browseButton2 = document.getElementById('browse-btn2');
 const preview = document.getElementById('preview');
-const menuButton = document.getElementById('menu-btn')
+const menuButton = document.getElementById('menu-btn');
+const setsList = document.getElementById('sets-list');
+const sidebar = document.getElementById('sidebar');
+const main = document.getElementById('main');
+const sidebarHeader = document.getElementById('sidebar-header');
+const closeSetsList = document.querySelector('.close-sets-list');
+const addSet = document.getElementById('add-set');
+const setsSpace = document.getElementById('sets-space');
 
 console.log("Hi! Welcome to TradeTrack.");
 
@@ -37,9 +44,27 @@ menuButton.onclick = function() {
     window.location.href = "/menu"
 }
 
+setsList.onclick = function () {
+    main.style.display = "none";
+    sidebar.style.display = "block";
+    sidebar.style.width = "100%"
+    sidebarHeader.style.width = "calc(100% - 10px)";
+    closeSetsList.style.display = "inline-block";
+}
 
+addSet.onclick = async function () {
+    const res = await axios.get('/api/addNewSet');
+    const data = res.data;
+    console.log(data.newSetId);
+    const setHTML = `<Button class="set" id="set-${data.newSetId}">New Set</Button>`;
+    setsSpace.insertAdjacentHTML('afterend', setHTML);
+    location.reload();
+}
 
-
+closeSetsList.onclick = function () {
+    main.style.display = "block";
+    sidebar.style.display = "none";
+}
 
 
 
@@ -81,32 +106,55 @@ function displayTrade (trade) {
                 <button class="edit"><img src="../Assets/Edit.png" alt="Edit"></button>
                 <button class="delete" data-trade-id="${trade.tradeId}"><img src="../Assets/Delete.png" alt=""></button>
             </div>
-                    
+            
             <div class="details">
-                <div class="pair-txt data">Pair: <div class="pair-name value">${trade.pairName}</div></div>
+                <div class="pair-txt data">Pair: 
+                    <div class="pair-name value">${trade.pairName}</div>
+                </div>
 
-                <div class="outcome-txt data">Outcome: <button class="outcome value">Profit</button></div>
+                <div class="outcome-txt data">Outcome: 
+                    <button class="outcome value">Profit</button>
+                </div>
 
-                <div class="date-txt data">Date: <div class="date value">${trade.date}</div></div>
+                <div class="date-txt data">Date: 
+                    <div class="date value">${trade.date}</div>
+                </div>
 
-                <div class="time-txt data">Time: <div class="time value">${trade.time}</div></div>
+                <div class="time-txt data">Time: 
+                    <div class="time value">${trade.time}</div>
+                </div>
 
-                <div class="session-txt data">Session: <div class="session value">London</div></div>
+                <div class="session-txt data">Session: 
+                    <div class="session value">London</div>
+                </div>
 
-                <div class="rrr-txt">Risk-to-Reward Ratio: <div class="rrr value">1:2</div></div>
+                <div class="rrr-txt">Risk-to-Reward Ratio: 
+                    <div class="rrr value">1:2</div>
+                </div>
 
-                <div class="position-txt data">Position: <button class="position value">Long</button></div>
+                <div class="position-txt data">Position: 
+                    <button class="position value">Long</button>
+                </div>
 
-                <div class="order-type-txt data">Order Type: <button class="order-type value">Limit Order</button></div>
+                <div class="order-type-txt data">Order Type: 
+                    <button class="order-type value">Limit Order</button>
+                </div>
 
-                <div class="entry-text data">Entry Level: <div class="entry value">1.23</div></div>
+                <div class="entry-text data">Entry Level: 
+                    <div class="entry value">1.23</div>
+                </div>
 
-                <div class="exit-txt data">Exit Level: <div class="exit value">2.34</div></div>
+                <div class="tp-txt data">TP Level: 
+                    <div class="tp value">2.34</div>
+                </div>
 
-                <div class="timeframe-txt data">Timeframe: <div class="timeframe value">${trade.timeframe}</div></div>
-
+                <div class="sl-txt data">SL Level: 
+                    <div class="sl value">1.04</div>
+                </div>
                 
-                <div class="confluences-txt data">Confluences: <div class="confluences value">N/A</div></div>
+                <div class="confluences-txt data">Confluences: 
+                    <div class="confluences value">N/A</div>
+                </div>
             </div>
                     
         </div>
@@ -129,6 +177,22 @@ function displayTrade (trade) {
 }
 
 
+async function displayPreviousSets() {
+    const res = await axios.get('/api/getPreviousSets');
+    const sets = res.data;
+    console.log("Previous sets: ", sets);
+    let count = 0;
+    
+    while ( count <= sets.length - 1) {
+        const setId = sets[count].setId;
+        const setName = sets[count].setName;
+        const setHTML = `<Button class="set" id="set-${setId}">${setName}</Button>`;
+        setsSpace.insertAdjacentHTML('afterend', setHTML);
+        count++;
+    }
+}
+
+displayPreviousSets();
 
 
 

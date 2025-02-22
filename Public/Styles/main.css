@@ -51,6 +51,7 @@ body {
     padding: 5px 5px 2px;
     border-radius: 10px;
     align-items: center;
+    margin-left: 3px;
 }
 
 .menu:hover {
@@ -63,12 +64,21 @@ body {
 }
 
 
+
+.sidebar-header div {
+    display: flex;
+    align-items: flex-start;
+}
+
+
 .add {
     background-color: transparent;
     border: 0;
     padding: 3px 3px 0 3px;
     border-radius: 10px;
     align-items: center;
+    margin-bottom: 0;
+    margin-right: 2px;
 }
 
 .add:hover {
@@ -81,19 +91,45 @@ body {
 }
 
 
+.close-sets-list {
+    display: none;
+    background-color: transparent;
+    border: 0;
+    border-radius: 10px;
+    padding: 3px 3px 1px 3px;
+    margin-top: 0;
+    margin-left: 3px;
+    margin-right: 2px;
+}
+.close-sets-list img {
+    width: 30px;
+    height: auto;
+}
+.close-sets-list:hover {
+    background-color: #383838;
+}
 
 
-.sidebar a {
+
+.sidebar .set {
     display: block;
     padding: 10px;
     color: white;
     text-decoration: none;
     margin: 5px 5px;
     border-radius: 8px;
+    background-color: transparent;
+    border: 0;
+    width: calc(100% - 11px);
+    text-align: left;
 }
 
-.sidebar a:hover {
-    background-color: #2b2b2b;
+.sidebar .sample-set {
+    display: none;
+}
+
+.sidebar .set:hover {
+    background-color: #292929;
 }
 
 .sidebar .space {
@@ -130,10 +166,6 @@ body {
     color: #ebebeb;
     overflow-y: auto;
 }
-
-
-
-
 
 .main .header {
     position: fixed;
@@ -446,7 +478,6 @@ body {
     align-items: flex-start;
     row-gap: 0px;
 }
-
 
 .trade .details div {
     min-width: fit-content;

@@ -12,36 +12,20 @@
 </head>
 <body>
 
-    <div class="sidebar">
-        <header>
+    <div class="sidebar" id="sidebar">
+        <header id="sidebar-header">
             <button class="menu" id="menu-btn"><img src="../Assets/Menu.png" alt="Menu"></button>
-            <button class="add"><img src="../Assets/Add.png" alt="Add"></button>
+            <div>
+                <button class="add" id="add-set"><img src="../Assets/Add.png" alt="Add"></button>
+                <button class="close-sets-list"><img src="../Assets/Cross.png" alt="Close"></button>
+            </div>
         </header>
-        <div class="space"></div>
-        <a href="">Strategy 1</a>
-        <a href="">Strategy 2</a>
-        <a href="">Strategy 3</a>
-        <a href="">Strategy 4</a>
-        <a href="">Strategy 5</a>
-        <a href="">Strategy 1</a>
-        <a href="">Strategy 2</a>
-        <a href="">Strategy 3</a>
-        <a href="">Strategy 4</a>
-        <a href="">Strategy 5</a>
-        <a href="">Strategy 1</a>
-        <a href="">Strategy 2</a>
-        <a href="">Strategy 3</a>
-        <a href="">Strategy 4</a>
-        <a href="">Strategy 5</a>
-        <a href="">Strategy 1</a>
-        <a href="">Strategy 2</a>
-        <a href="">Strategy 3</a>
-        <a href="">Strategy 4</a>
-        <a href="">Strategy 5</a>
+        <div class="space" id="sets-space"></div>
+        <Button class="sample-set set">New Sample Set</Button>
     </div>
 
 
-    <div class="main">
+    <div class="main" id="main">
         <div class="header">
             <img class="logo" src="../Assets/Logo dark no bg.png" alt="TradeTrack Logo">
 
@@ -59,7 +43,7 @@
 
             <div class="left-btns">
                 <div class="mobile-btns">
-                    <button class="sets-list"><img src="../Assets/List.png" alt="List"></button>
+                    <button class="sets-list" id="sets-list"><img src="../Assets/List.png" alt="List"></button>
                     <button class="browse-btn" id="browse-btn2">Browse</button>
                 </div>
                 <button class="info-btn"><img src="../Assets/info.png" alt="Info"></button>

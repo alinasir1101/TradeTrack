@@ -122,6 +122,15 @@ p {
 
 
 
+#loginForm .submit-btn {
+    margin-top: 15px;
+}
+
+#signupForm .submit-btn {
+    margin-top: 20px;
+}
+
+
 
 
 
