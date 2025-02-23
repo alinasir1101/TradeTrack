@@ -217,6 +217,25 @@ router.get('/addNewSet', userMiddleware, async (req, res) => {
 });
 
 
+router.get('selectSet/:setId', userMiddleware, (req, res) => {
+    const setId = req.params.setId;
+    const user = req.user;
+
+    const currentSetId = setId;
+
+    User.updateOne({ userId: user.userId }, { currentSetId})
+    .then(result => {
+        console.log('Current Set ID Update Successful: ', result);
+        res.json({ currentSetId: result });
+    })
+    .catch(err => {
+        console.error('Error Updating Current Set ID:', err);
+        res.json({ Error: err});
+    });
+
+});
+
+
 
 
 // get all previous sets to be displayed

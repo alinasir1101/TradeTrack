@@ -52,13 +52,57 @@ setsList.onclick = function () {
     closeSetsList.style.display = "inline-block";
 }
 
+
+
+
+// Display all previous trades when starting
+
+async function fetchPreviousTrades () {
+    try {
+        const res = await axios.get('/api/previousTrades');
+        previousTrades = res.data;
+        console.log("Previous Trades: ", previousTrades);
+        while (tradeCount <= previousTrades.length) {
+            displayTrade(previousTrades[tradeCount-1]);
+        }
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+    }
+}
+
+
+
+fetchPreviousTrades();
+
+
+
+
 addSet.onclick = async function () {
+
+    document.querySelectorAll(".trade").forEach(el => el.remove());
     const res = await axios.get('/api/addNewSet');
     const data = res.data;
     console.log(data.newSetId);
     const setHTML = `<Button class="set" id="set-${data.newSetId}">New Set</Button>`;
     setsSpace.insertAdjacentHTML('afterend', setHTML);
-    location.reload();
+    fetchPreviousTrades();
+
+    setTimeout(() => {
+        const setButton = document.getElementById(`set-${data.newSetId}`);
+        document.querySelectorAll('.set').forEach(el => el.classList.remove("active-set"));
+        setButton.classList.add("active-set");
+
+        if (setButton) {
+            setButton.onclick = async function () {
+                document.querySelectorAll('.set').forEach(el => el.classList.remove("active-set"));
+                setButton.classList.add("active-set");
+                document.querySelectorAll(".trade").forEach(el => el.remove());
+                const res = await axios.get(`/api/selectSet/${data.newSetId}`);
+                console.log(res.data);
+                fetchPreviousTrades();
+            };
+        }
+    }, 100);
 }
 
 closeSetsList.onclick = function () {
@@ -76,7 +120,6 @@ confirmDelete.onclick = async function() {
             const response = await fetch(`/api/deleteTrade/${tradeIdToDelete}`, {
                 method: 'DELETE'
             });
-
             if (response.ok) {
                 console.log(`Trade ${tradeIdToDelete} deleted successfully`);
                 location.reload();
@@ -106,7 +149,7 @@ function displayTrade (trade) {
                 <button class="edit"><img src="../Assets/Edit.png" alt="Edit"></button>
                 <button class="delete" data-trade-id="${trade.tradeId}"><img src="../Assets/Delete.png" alt=""></button>
             </div>
-            
+
             <div class="details">
                 <div class="pair-txt data">Pair: 
                     <div class="pair-name value">${trade.pairName}</div>
@@ -176,6 +219,7 @@ function displayTrade (trade) {
 
 }
 
+// display all sets
 
 async function displayPreviousSets() {
     const res = await axios.get('/api/getPreviousSets');
@@ -188,6 +232,23 @@ async function displayPreviousSets() {
         const setName = sets[count].setName;
         const setHTML = `<Button class="set" id="set-${setId}">${setName}</Button>`;
         setsSpace.insertAdjacentHTML('afterend', setHTML);
+
+        const setButton = document.getElementById(`set-${setId}`);
+        document.querySelectorAll('.set').forEach(el => el.classList.remove("active-set"));
+        setButton.classList.add("active-set");
+
+        setTimeout(() => {
+            if (setButton) {
+                setButton.onclick = async function () {
+                    document.querySelectorAll('.set').forEach(el => el.classList.remove("active-set"));
+                    setButton.classList.add("active-set");
+                    document.querySelectorAll(".trade").forEach(el => el.remove());
+                    const res = await axios.get(`/api/selectSet/${setId}`);
+                    console.log(res.data);
+                    fetchPreviousTrades();
+                };
+            }
+        }, 100);
         count++;
     }
 }
@@ -197,25 +258,7 @@ displayPreviousSets();
 
 
 
-// Display all previous trades when starting
 
-async function fetchPreviousTrades () {
-    try {
-        const res = await axios.get('/api/previousTrades');
-        previousTrades = res.data;
-        console.log("Previous Trades: ", previousTrades);
-        while (tradeCount <= previousTrades.length) {
-            displayTrade(previousTrades[tradeCount-1]);
-        }
-    } catch (error) {
-        console.error('Error fetching data: ', error);
-    }
-}
-
-
-
-
-fetchPreviousTrades();
 
 
 
