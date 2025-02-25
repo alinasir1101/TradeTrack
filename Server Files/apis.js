@@ -22,7 +22,6 @@ const upload = multer({ storage: storage });
 // Get User Info from Cookie token
 router.get("/getUserInfo", userMiddleware, (req, res) => {
     let user = req.user;
-    console.log(user);
     res.json(user);
 });
 
@@ -107,7 +106,8 @@ router.post('/upload', userMiddleware, upload.single('image'), async (req, res) 
     }
     console.log("Set details: ", set);
 
-    let lastTradeId = set.lastTradeId + 1; //there's no lastTradeId in set
+    let lastTradeId = set.lastTradeId + 1; 
+    console.log('last trade Id: ', lastTradeId);
     let tradesList = set.tradesList;
     let numOfTrades = set.numOfTrades + 1;
 
@@ -115,7 +115,7 @@ router.post('/upload', userMiddleware, upload.single('image'), async (req, res) 
 
 
     try {
-        await Set.updateOne({ userId: user.userId, setId: user.setId}, {lastTradeId, tradesList, numOfTrades});
+        await Set.updateOne({ userId: user.userId, setId: user.currentSetId}, {lastTradeId, tradesList, numOfTrades});
     } catch (err) {
         console.error('Error:', err);
     }
@@ -148,7 +148,7 @@ router.post('/upload', userMiddleware, upload.single('image'), async (req, res) 
     try {
 
         const newTrade = await Trade.create({
-            tradeId: lastTradeId,
+            tradeId: lastTradeId, // stuck
             setId: user.currentSetId,
             userId: user.userId,
             pairName: tradeData.pairName,
@@ -338,23 +338,34 @@ router.get('/getPreviousSets', userMiddleware, async (req, res) => {
     while (count <= setsList.length - 1) {
         await Set.findOne({ userId: user.userId, setId: setsList[count] })
         .then(set => {
-            console.log('Set:', set)
-            const setName = set.setName; // stuck
+            // console.log('Set:', set)
+            const setName = set.setName; 
             sets.push({ setId: setsList[count], setName: setName });
         })
         .catch(err => {
-            console.error('Error Fetching Trade:', err);
+            console.error('Error Fetching Set:', err);
         });
 
         
         count ++;
     }
 
-    console.log("All sets: ", sets);
+    // console.log("All sets: ", sets);
 
     res.json(sets);
 });
 
+
+
+
+router.post('/updateOutcome', userMiddleware, async (req, res) => {
+    const data = req.body;
+    const user = req.user;
+
+    const outcomeUpdate = await Trade.updateOne({ userId: user.userId, setId: user.currentSetId, tradeId: data.tradeId },
+    { outcome: data.outcome });
+    res.json(outcomeUpdate);
+});
 
 
 

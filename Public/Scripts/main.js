@@ -34,6 +34,18 @@ const cancelDelete = document.getElementById('cancelDelete');
 let tradeIdToDelete = null;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 cancelDelete.onclick = function() {
     deleteModal.style.display = 'none';
 };
@@ -106,7 +118,8 @@ addSet.onclick = async function () {
     console.log(data.newSetId);
     const setHTML = `<Button class="set" id="set-${data.newSetId}">New Set</Button>`;
     spawnSets.insertAdjacentHTML('afterend', setHTML);
-    fetchPreviousTrades();
+    tradeCount = 1;
+    // fetchPreviousTrades();
 
     setTimeout(() => {
         const setButton = document.getElementById(`set-${data.newSetId}`);
@@ -183,7 +196,7 @@ function displayTrade (trade) {
                 </div>
 
                 <div class="outcome-txt data">Outcome: 
-                    <button class="outcome value">Profit</button>
+                    <button class="outcome value" outcome-trade-id="${trade.tradeId}">${trade.outcome}</button>
                 </div>
 
                 <div class="date-txt data">Date: 
@@ -243,6 +256,35 @@ function displayTrade (trade) {
         deleteModal.style.display = 'block';
     });
 
+
+    // Handle Outcome Button
+    const outcomeButton = document.querySelector(`#trade-${trade.tradeId} .outcome`);
+    if (trade.outcome == 'Profit') {
+        outcomeButton.classList.add('outcome-profit');
+    } else if (trade.outcome == 'Loss') {
+        outcomeButton.classList.add('outcome-loss');
+    }
+    outcomeButton.addEventListener('click', () => {
+        if (outcomeButton.textContent == "None") {
+            outcomeButton.textContent = "Profit";
+            outcomeButton.classList.add('outcome-profit');
+        } else if (outcomeButton.textContent == "Profit") {
+            outcomeButton.textContent = "Loss";
+            outcomeButton.classList.add('outcome-loss');
+            outcomeButton.classList.remove('outcome-profit');
+        } else if (outcomeButton.textContent == "Loss") {
+            outcomeButton.textContent = "None";
+            outcomeButton.classList.remove('outcome-loss');
+        }
+        tradeIdForOutcome = outcomeButton.getAttribute('outcome-trade-id');
+        axios.post('/api/updateOutcome', { tradeId: tradeIdForOutcome, outcome: outcomeButton.textContent })
+        .then(function (response) {
+            console.log("Success:", response.data);
+        })
+        .catch(function (error) {
+            console.error("Error:", error);
+        });
+    });
 
 }
 

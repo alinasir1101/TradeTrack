@@ -406,6 +406,7 @@ body {
 
 
 
+
 .content {
     padding: 60px 10px 20px 10px; /* Padding adjusts for fixed header */
     
@@ -549,10 +550,23 @@ body {
     filter: brightness(1.2); /* Increase brightness (1.5x) */
 }
 
+
+
 .trade .details .outcome {
-    background-color: #0a794b;
+    background-color: #494949;
     border: 0;
 }
+
+.trade .outcome-profit {
+    background-color: #0a794b !important;
+}
+
+.trade .outcome-loss {
+    background-color: #b40808 !important;
+}
+
+
+
 
 .content .info {
     margin-right: 10px;
@@ -584,7 +598,7 @@ body {
     /* margin-right: 20px; */
     margin-bottom: 10px;
 
-    background-color: #b40808; 
+    background-color: #53108a; 
     /* r #aa0000 #2e2e2e g #15613b*/
 
     padding: 5px;
