@@ -55,7 +55,7 @@ body {
 }
 
 .menu:hover {
-    background-color: #383838;
+    background-color: #313131;
 }
 
 .menu img {
@@ -82,7 +82,7 @@ body {
 }
 
 .add:hover {
-    background-color: #383838;
+    background-color: #313131;
 }
 
 .add img {
@@ -105,9 +105,13 @@ body {
     width: 30px;
     height: auto;
 }
+
 .close-sets-list:hover {
-    background-color: #383838;
+    background-color: #313131;
 }
+
+
+
 
 
 
@@ -120,7 +124,7 @@ body {
     border-radius: 8px;
     background-color: transparent;
     border: 0;
-    width: calc(100% - 11px);
+    width: calc(100% - 10px);
     text-align: left;
 }
 
@@ -133,11 +137,25 @@ body {
 }
 
 .sidebar .set:hover {
-    background-color: #292929;
+    background-color: #272727;
 }
 
 .sidebar .space {
     padding: 30px;
+}
+.sidebar-loader {
+    display: none;
+    width: 25px;
+    height: 25px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 0.3s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 
@@ -397,6 +415,28 @@ body {
     padding: 50px 0px;
 }
 
+.loader {
+    display: flex;
+    justify-content: center;
+}
+
+.content-loader {
+    display: none;
+    width: 25px;
+    height: 25px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 0.3s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
 
 
 
@@ -442,7 +482,7 @@ body {
 }
 
 .modal #confirmDelete {
-    background-color: rgb(212, 0, 0);
+    background-color: #b40808;
 }
 
 .modal #cancelDelete {
@@ -450,7 +490,7 @@ body {
 }
 
 .modal #confirmDelete:hover {
-    background-color: rgb(255, 15, 15);
+    background-color: #ce0e0e;
 }
 
 .modal #cancelDelete:hover {
@@ -544,7 +584,7 @@ body {
     /* margin-right: 20px; */
     margin-bottom: 10px;
 
-    background-color: #a30b0b; 
+    background-color: #b40808; 
     /* r #aa0000 #2e2e2e g #15613b*/
 
     padding: 5px;
@@ -575,7 +615,7 @@ body {
     background-color: #2b2b2b;
 }
 .trade .delete:hover {
-    background-color: #a30b0b;
+    background-color: #b40808;
 }
 
 

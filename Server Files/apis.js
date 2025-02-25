@@ -48,6 +48,42 @@ router.get('/previousTrades', userMiddleware, (req, res) => {
 
 
 
+// Previous Trades with Set ID
+
+router.get('/previousTradesWithId/:setId', userMiddleware, (req, res) => {
+    const setId = req.params.setId;
+    let user = req.user;
+
+    Trade.find({ userId: user.userId, setId: setId })
+    .then(trades => {
+        res.json(trades);
+    })
+    .catch(err => {
+        console.error('Error fetching trades from database: ', err);
+    });
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Upload image route
@@ -58,8 +94,6 @@ router.post('/upload', userMiddleware, upload.single('image'), async (req, res) 
     if (!file) {
         return res.status(400).json({ error: 'No file uploaded' });
     }
-
-
 
 
 
@@ -88,8 +122,6 @@ router.post('/upload', userMiddleware, upload.single('image'), async (req, res) 
 
 
 
-
-
     // Upload to Cloud Storage
     const buffer = req.file.buffer;
     const destination = `uploads/${lastTradeId}-${user.userId}-${req.file.originalname}`;
@@ -102,10 +134,6 @@ router.post('/upload', userMiddleware, upload.single('image'), async (req, res) 
     }
 
     
-
-    
-    
-
 
 
     
@@ -154,18 +182,47 @@ router.post('/upload', userMiddleware, upload.single('image'), async (req, res) 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Delete trade route
-router.delete('/deleteTrade/:tradeId', async (req, res) => {
+router.delete('/deleteTrade/:tradeId', userMiddleware, async (req, res) => {
     const tradeId = req.params.tradeId;
+    const user = req.user;
 
     try {
-        await Trade.deleteOne({ tradeId: tradeId });
+        await Trade.deleteOne({ tradeId: tradeId, userId: user.userId, setId: user.currentSetId });
         res.status(200).json({ message: 'Trade deleted successfully' });
     } catch (error) {
         console.error('Error deleting trade:', error);
         res.status(500).json({ error: 'Failed to delete trade' });
     }
 });
+
+
+
+
+
+
+
+
 
 
 
@@ -217,13 +274,32 @@ router.get('/addNewSet', userMiddleware, async (req, res) => {
 });
 
 
-router.get('selectSet/:setId', userMiddleware, (req, res) => {
-    const setId = req.params.setId;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Update currentSetId
+router.get('/selectSet/:setId', userMiddleware, (req, res) => {
+    
+    const setIdString = req.params.setId;
+    console.log('Params: ', setIdString);
     const user = req.user;
 
-    const currentSetId = setId;
+    const currentSetId = parseInt(setIdString, 10);
 
-    User.updateOne({ userId: user.userId }, { currentSetId})
+    User.updateOne({ userId: user.userId }, { currentSetId })
     .then(result => {
         console.log('Current Set ID Update Successful: ', result);
         res.json({ currentSetId: result });
@@ -234,6 +310,19 @@ router.get('selectSet/:setId', userMiddleware, (req, res) => {
     });
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -249,7 +338,8 @@ router.get('/getPreviousSets', userMiddleware, async (req, res) => {
     while (count <= setsList.length - 1) {
         await Set.findOne({ userId: user.userId, setId: setsList[count] })
         .then(set => {
-            const setName = set.setName;
+            console.log('Set:', set)
+            const setName = set.setName; // stuck
             sets.push({ setId: setsList[count], setName: setName });
         })
         .catch(err => {

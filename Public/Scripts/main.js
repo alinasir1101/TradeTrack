@@ -1,3 +1,5 @@
+// const { options } = require("../../Server Files/apis");
+
 const uploadBox = document.getElementById('img-container');
 const fileInput = document.getElementById('file-input');
 const browseButton = document.getElementById('browse-btn');
@@ -10,7 +12,10 @@ const main = document.getElementById('main');
 const sidebarHeader = document.getElementById('sidebar-header');
 const closeSetsList = document.querySelector('.close-sets-list');
 const addSet = document.getElementById('add-set');
-const setsSpace = document.getElementById('sets-space');
+const spawnSets = document.getElementById('spawn-sets');
+
+const contentLoader = document.querySelector('.content-loader');
+const sidebarLoader = document.querySelector('.sidebar-loader');
 
 console.log("Hi! Welcome to TradeTrack.");
 
@@ -18,7 +23,7 @@ function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const contentSpace = document.getElementById('content-space');
+const spawnTrades = document.getElementById('spawn-trades');
 let tradeCount = 1;
 let previousTrades =[];
 
@@ -56,20 +61,36 @@ setsList.onclick = function () {
 
 
 // Display all previous trades when starting
-
 async function fetchPreviousTrades () {
     try {
+        contentLoader.style.display = 'block';
         const res = await axios.get('/api/previousTrades');
         previousTrades = res.data;
         console.log("Previous Trades: ", previousTrades);
         while (tradeCount <= previousTrades.length) {
             displayTrade(previousTrades[tradeCount-1]);
         }
+        contentLoader.style.display = 'none';
     } catch (error) {
         console.error('Error fetching data: ', error);
     }
 }
 
+
+async function fetchPreviousTradesWithId (id) {
+    try {
+        contentLoader.style.display = 'block';
+        const res = await axios.get(`/api/previousTradesWithId/${id}`);
+        previousTrades = res.data;
+        console.log("Previous Trades: ", previousTrades);
+        while (tradeCount <= previousTrades.length) {
+            displayTrade(previousTrades[tradeCount-1]);
+        }
+        contentLoader.style.display = 'none';
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+    }
+}
 
 
 fetchPreviousTrades();
@@ -84,7 +105,7 @@ addSet.onclick = async function () {
     const data = res.data;
     console.log(data.newSetId);
     const setHTML = `<Button class="set" id="set-${data.newSetId}">New Set</Button>`;
-    setsSpace.insertAdjacentHTML('afterend', setHTML);
+    spawnSets.insertAdjacentHTML('afterend', setHTML);
     fetchPreviousTrades();
 
     setTimeout(() => {
@@ -99,7 +120,12 @@ addSet.onclick = async function () {
                 document.querySelectorAll(".trade").forEach(el => el.remove());
                 const res = await axios.get(`/api/selectSet/${data.newSetId}`);
                 console.log(res.data);
-                fetchPreviousTrades();
+                tradeCount = 1;
+                if (window.innerWidth <= 600) {
+                    main.style.display = "block";
+                    sidebar.style.display = "none";
+                }
+                await fetchPreviousTrades();
             };
         }
     }, 100);
@@ -122,7 +148,7 @@ confirmDelete.onclick = async function() {
             });
             if (response.ok) {
                 console.log(`Trade ${tradeIdToDelete} deleted successfully`);
-                location.reload();
+                document.getElementById(`trade-${tradeIdToDelete}`).remove();
             } else {
                 console.error(`Failed to delete trade ${tradeIdToDelete}`);
             }
@@ -133,6 +159,7 @@ confirmDelete.onclick = async function() {
         }
     }
 };
+
 
 
 
@@ -205,7 +232,7 @@ function displayTrade (trade) {
     </div>
     `;
 
-    contentSpace.insertAdjacentHTML('afterend', tradeHTML);
+    spawnTrades.insertAdjacentHTML('afterend', tradeHTML);
     tradeCount ++;
 
 
@@ -222,6 +249,7 @@ function displayTrade (trade) {
 // display all sets
 
 async function displayPreviousSets() {
+    sidebarLoader.style.display = 'block';
     const res = await axios.get('/api/getPreviousSets');
     const sets = res.data;
     console.log("Previous sets: ", sets);
@@ -231,26 +259,49 @@ async function displayPreviousSets() {
         const setId = sets[count].setId;
         const setName = sets[count].setName;
         const setHTML = `<Button class="set" id="set-${setId}">${setName}</Button>`;
-        setsSpace.insertAdjacentHTML('afterend', setHTML);
+        spawnSets.insertAdjacentHTML('afterend', setHTML);
 
-        const setButton = document.getElementById(`set-${setId}`);
-        document.querySelectorAll('.set').forEach(el => el.classList.remove("active-set"));
-        setButton.classList.add("active-set");
+        
 
         setTimeout(() => {
+            const setButton = document.getElementById(`set-${setId}`);
+            axios.get('/api/getUserInfo')
+            .then(res => {
+                const user = res.data;
+                console.log("Current Set ID was: ", user.currentSetId);
+                if (setId == user.currentSetId) {
+                    setButton.classList.add("active-set");
+                }
+            })
+            .catch(err => console.log("Error fetching User Info: ", err));
+            
+            
+
+            
+
             if (setButton) {
                 setButton.onclick = async function () {
+                    console.log("Different Set Button Clicked: ", setButton, "Set ID: ", setId);
                     document.querySelectorAll('.set').forEach(el => el.classList.remove("active-set"));
                     setButton.classList.add("active-set");
                     document.querySelectorAll(".trade").forEach(el => el.remove());
                     const res = await axios.get(`/api/selectSet/${setId}`);
                     console.log(res.data);
-                    fetchPreviousTrades();
+                    tradeCount = 1;
+                    if (window.innerWidth <= 600) {
+                        main.style.display = "block";
+                        sidebar.style.display = "none";
+                    }
+                    await fetchPreviousTradesWithId(setId);
                 };
             }
+
+            
+
         }, 100);
         count++;
     }
+    sidebarLoader.style.display = 'none';
 }
 
 displayPreviousSets();
@@ -324,6 +375,7 @@ uploadBox.addEventListener('drop', (event) => {
 // Function to handle multiple file uploads
 
 async function handleFiles(files) {
+    contentLoader.style.display = 'block';
     const fileArray = Array.from(files); // Convert FileList to Array
 
     // Sequentially upload each file
@@ -354,6 +406,7 @@ async function handleFiles(files) {
             alert(`"${file.name}" is not a valid image file.`);
         }
     }
+    contentLoader.style.display = 'none';
 }
 
 
